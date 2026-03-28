@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://b1s0wcna22jh5" path="res://scripts/puzzles/interactable_area.gd" id="2_interact"]
 [ext_resource type="Script" uid="uid://u6i8cn2wenhg" path="res://scenes/rooms/LuzDaSala.gd" id="3_eud5g"]
 [ext_resource type="Script" uid="uid://d0qvuwf01ocoh" path="res://scripts/rooms/room1.gd" id="4_room1"]
+[ext_resource type="Script" path="res://scripts/puzzles/memory_path_puzzle.gd" id="5_puzzle"]
+[ext_resource type="Script" path="res://scripts/puzzles/memory_door.gd" id="6_door"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_quadro"]
 size = Vector2(120, 80)
@@ -81,9 +83,35 @@ points = PackedVector2Array(-52, -52, 52, -52, 52, 52, -52, 52, -52, -52)
 width = 2.0
 default_color = Color(0.55, 0.48, 0.35, 1)
 
+[node name="ZonaVampiro" type="Area2D" parent="." unique_id=1093833497]
+position = Vector2(-920, 0)
+script = ExtResource("2_interact")
+vampire_only = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaVampiro" unique_id=926012205]
+shape = SubResource("RectangleShape2D_vamp")
+
+[node name="Visual" type="Polygon2D" parent="ZonaVampiro" unique_id=25744490]
+color = Color(0.42, 0.18, 0.55, 0.5)
+polygon = PackedVector2Array(-60, -50, 60, -50, 60, 50, -60, 50)
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=682937339]
+script = ExtResource("3_eud5g")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1979033215]
+environment = SubResource("Environment_j0bqs")
+
+[node name="MemoryPathPuzzle" type="Node2D" parent="." unique_id=1000000001]
+script = ExtResource("5_puzzle")
+tile_size = 64.0
+grid_offset = Vector2(-160, -160)
+grid_width = 5
+grid_height = 5
+correct_path = [Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2), Vector2i(2, 1), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0)]
+
 [node name="Porta" type="Area2D" parent="." unique_id=1478008756]
 position = Vector2(920, 0)
-script = ExtResource("2_interact")
+script = ExtResource("6_door")
 is_level_exit = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Porta" unique_id=1262937069]
@@ -104,20 +132,8 @@ position = Vector2(22, 8)
 color = Color(0.55, 0.45, 0.28, 1)
 polygon = PackedVector2Array(-4, -6, 4, -6, 4, 6, -4, 6)
 
-[node name="ZonaVampiro" type="Area2D" parent="." unique_id=1093833497]
-position = Vector2(-920, 0)
-script = ExtResource("2_interact")
-vampire_only = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaVampiro" unique_id=926012205]
-shape = SubResource("RectangleShape2D_vamp")
-
-[node name="Visual" type="Polygon2D" parent="ZonaVampiro" unique_id=25744490]
-color = Color(0.42, 0.18, 0.55, 0.5)
-polygon = PackedVector2Array(-60, -50, 60, -50, 60, 50, -60, 50)
-
-[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=682937339]
-script = ExtResource("3_eud5g")
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1979033215]
-environment = SubResource("Environment_j0bqs")
+[node name="LockedIndicator" type="Polygon2D" parent="Porta" unique_id=1478008757]
+z_index = 2
+position = Vector2(0, -40)
+color = Color(0.8, 0.2, 0.2, 1)
+polygon = PackedVector2Array(-8, -8, 8, -8, 0, 8)
