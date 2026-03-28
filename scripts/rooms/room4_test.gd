@@ -11,10 +11,12 @@ func _ready() -> void:
 		DayNightSystem.reset_run()
 		print("[Room4Test] DayNightSystem resetado - começa à noite (vampiro)")
 
-	## Garante que checklist tem as tarefas da Room4
+	## Checklist só para as tarefas desta sala (fluxo principal usa `begin_room_requirements` em `main.gd`).
 	if ChecklistSystem:
-		ChecklistSystem.reset_for_level()
-		print("[Room4Test] ChecklistSystem resetado")
+		var cl: ChecklistData = ChecklistSystem as ChecklistData
+		if cl:
+			cl.begin_room_requirements(cl.room4_tasks)
+		print("[Room4Test] Checklist da Room4 ativa")
 
 	print("[Room4Test] Teste pronto! Começa à NOITE (vampiro)")
 	print("[Room4Test] Instruções:")

@@ -1,6 +1,10 @@
 extends CharacterBody2D
 
 const _DashGhostScript: Script = preload("res://scripts/player/dash_ghost.gd")
+const _FACE_UP: int = 0
+const _FACE_RIGHT: int = 1
+const _FACE_DOWN: int = 2
+const _FACE_LEFT: int = 3
 
 ## If true: walk in all directions (bird's-eye). If false: run/jump platformer (side-view gameplay).
 @export var top_down: bool = true
@@ -25,6 +29,7 @@ const _DashGhostScript: Script = preload("res://scripts/player/dash_ghost.gd")
 
 ## Última direção de movimento (normalizada); usada quando a velocidade é ~0.
 var _last_move_dir: Vector2 = Vector2.DOWN
+var _facing_cardinal: int = _FACE_DOWN
 
 var _is_dashing: bool = false
 ## Direção fixa durante o dash: top-down = velocidade completa; side-view = só X é usado.
@@ -60,9 +65,12 @@ var _last_collision_normal: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	_setup_point_light_texture()
-	point_light.texture_scale = 3.2
+	point_light.texture_scale = 6.2
 	point_light.position = Vector2.ZERO
+	point_light.shadow_enabled = false
 	point_light.shadow_filter = Light2D.SHADOW_FILTER_PCF5
+	_visual.rotation = 0.0
+	_apply_top_down_facing(_last_move_dir)
 
 	_setup_sfx()
 
@@ -157,17 +165,17 @@ func _feel_squash(scale_a: Vector2, duration: float) -> void:
 
 func _on_phase_changed(is_night: bool) -> void:
 	if is_night:
-		point_light.color = Color(0.95, 0.35, 0.38)
-		point_light.energy = 1.35
-		_light_base_energy = 1.35
-		_light_pulse_speed = 4.0  # Faster pulse for vampire
-		_light_pulse_amount = 0.18  # Stronger pulse
+		point_light.color = Color(1.0, 0.56, 0.58)
+		point_light.energy = 2.9
+		_light_base_energy = 2.9
+		_light_pulse_speed = 2.8  # Keep a subtle pulse without reducing readability
+		_light_pulse_amount = 0.12
 	else:
-		point_light.color = Color(1.0, 0.92, 0.72)
-		point_light.energy = 0.95
-		_light_base_energy = 0.95
-		_light_pulse_speed = 1.5  # Slower pulse for human
-		_light_pulse_amount = 0.08  # Subtler pulse
+		point_light.color = Color(1.0, 0.99, 0.94)
+		point_light.energy = 2.25
+		_light_base_energy = 2.25
+		_light_pulse_speed = 0.8
+		_light_pulse_amount = 0.03
 	_visual.queue_redraw()
 
 	if sfx_enabled and _booted:
@@ -209,10 +217,28 @@ func get_facing_direction() -> Vector2:
 	return Vector2.RIGHT
 
 
+func _cardinalize_direction(dir: Vector2) -> int:
+	if absf(dir.x) > absf(dir.y):
+		return _FACE_RIGHT if dir.x > 0.0 else _FACE_LEFT
+	return _FACE_DOWN if dir.y > 0.0 else _FACE_UP
+
+
+func _apply_top_down_facing(dir: Vector2) -> void:
+	_facing_cardinal = _cardinalize_direction(dir)
+	match _facing_cardinal:
+		_FACE_UP, _FACE_DOWN:
+			_visual.rotation = 0.0
+		_FACE_RIGHT:
+			_visual.rotation = PI * 0.5
+		_FACE_LEFT:
+			_visual.rotation = -PI * 0.5
+	if _visual.has_method("set_facing"):
+		_visual.call("set_facing", _facing_cardinal)
+
+
 func _update_facing_rotation() -> void:
 	if top_down:
-		var d := get_facing_direction()
-		_visual.rotation = d.angle() + PI * 0.5
+		_apply_top_down_facing(get_facing_direction())
 	else:
 		var dir_x := get_facing_direction().x
 		_visual.rotation = PI if dir_x < 0.0 else 0.0
@@ -382,6 +408,8 @@ func _spawn_dash_ghost() -> void:
 	# Draw the ghost
 	ghost.set_script(_DashGhostScript)
 	ghost.set_ghost_color(DayNightSystem.is_night)
+	if ghost.has_method("set_facing"):
+		ghost.call("set_facing", _facing_cardinal)
 
 	# Fade out and remove
 	var tw := ghost.create_tween()

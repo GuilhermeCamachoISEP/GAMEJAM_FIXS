@@ -19,14 +19,14 @@ size = Vector2(120, 100)
 
 [sub_resource type="Environment" id="Environment_j0bqs"]
 background_mode = 3
-ambient_light_energy = 0.18
-glow_enabled = true
-glow_intensity = 0.4
-glow_strength = 0.6
-glow_hdr_threshold = 0.78
+ambient_light_energy = 1.35
+glow_enabled = false
 
 [node name="Room1" type="Node2D" unique_id=275074475]
 script = ExtResource("4_room1")
+
+[node name="Spawn" type="Marker2D" parent="."]
+position = Vector2(0, 280)
 
 [node name="Room" parent="." unique_id=429995292 instance=ExtResource("1_room")]
 

@@ -8,6 +8,8 @@ func _ready() -> void:
 
 func _on_phase_changed(is_night: bool) -> void:
 	if is_night:
-		color = Color(0.42, 0.38, 0.52, 1.0)
+		# Night should still be readable, but clearly moodier than day.
+		color = Color(0.9, 0.88, 0.96, 1.0)
 	else:
-		color = Color(0.9, 0.84, 0.76, 1.0)
+		# Day should feel unmistakably bright and easy to read.
+		color = Color(1.18, 1.14, 1.08, 1.0)

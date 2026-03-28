@@ -10,3 +10,4 @@ func _ready() -> void:
 
 func _on_room2_puzzle_completed() -> void:
 	ChecklistSystem.complete_task("r2_code_entered")
+	LoopSystem.complete_level()

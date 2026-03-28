@@ -95,11 +95,18 @@ func _on_level_ended() -> void:
 			Game.set_game_paused(false)
 
 
+## Nova sala no mesmo run — o timer global continua mas o painel de check volta a atualizar.
+func reset_after_room_advance() -> void:
+	_ended = false
+	_on_loop_shown()
+	_refresh_checklist()
+
+
 func _refresh_checklist() -> void:
 	if _checklist_data == null:
 		return
 	_checklist.clear()
-	for task_id: String in _checklist_data.level_1_tasks:
+	for task_id: String in _checklist_data.get_active_tasks():
 		var done: bool = _checklist_data.is_task_done(task_id)
 		var text: String = ("[x] " if done else "[ ] ") + ChecklistData.task_label(task_id)
 		_checklist.add_item(text)

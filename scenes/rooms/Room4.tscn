@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://room4gothic"]
 
-[ext_resource type="Script" path="res://scripts/rooms/room4.gd" id="1_room4"]
+[ext_resource type="Script" uid="uid://c6rqamkxkhq6" path="res://scripts/rooms/room4.gd" id="1_room4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
 size = Vector2(90, 160)
@@ -11,23 +11,23 @@ font_color = Color(0.85, 0.82, 0.78, 1)
 outline_size = 2
 outline_color = Color(0.08, 0.06, 0.1, 0.9)
 
-[node name="Room4" type="Node2D"]
+[node name="Room4" type="Node2D" unique_id=513412221]
 script = ExtResource("1_room4")
 
-[node name="Decorations" type="Node2D" parent="."]
+[node name="Decorations" type="Node2D" parent="." unique_id=1610119566]
 
-[node name="Bells" type="Node2D" parent="."]
+[node name="Bells" type="Node2D" parent="." unique_id=1222573760]
 
-[node name="SoundMachine" type="Node2D" parent="."]
+[node name="SoundMachine" type="Node2D" parent="." unique_id=1107872245]
 
-[node name="ExitDoor" type="Area2D" parent="."]
+[node name="ExitDoor" type="Area2D" parent="." unique_id=1284207599]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitDoor"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitDoor" unique_id=227394743]
 shape = SubResource("RectangleShape2D_door")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=657713004]
 
-[node name="FeedbackLabel" type="Label" parent="CanvasLayer"]
+[node name="FeedbackLabel" type="Label" parent="CanvasLayer" unique_id=548223661]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -45,6 +45,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="CanvasModulate" type="CanvasModulate" parent="."]
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1098632582]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1413688690]

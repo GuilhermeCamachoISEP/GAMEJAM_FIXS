@@ -10,18 +10,18 @@ size = Vector2(2080, 40)
 
 [node name="Floor" type="Polygon2D" parent="."]
 z_index = -2
-color = Color(0.14, 0.1, 0.13, 1)
+color = Color(0.46, 0.4, 0.46, 1)
 polygon = PackedVector2Array(-1000, -1000, 1000, -1000, 1000, 1000, -1000, 1000)
 
 [node name="FloorRug" type="Polygon2D" parent="."]
 z_index = -1
-color = Color(0.11, 0.08, 0.1, 1)
+color = Color(0.38, 0.32, 0.38, 1)
 polygon = PackedVector2Array(-720, -720, 720, -720, 720, 720, -720, 720)
 
 [node name="FloorBorder" type="Line2D" parent="."]
 z_index = 2
 width = 5.0
-default_color = Color(0.52, 0.4, 0.34, 0.72)
+default_color = Color(0.76, 0.64, 0.56, 0.9)
 joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
@@ -34,7 +34,7 @@ position = Vector2(-1020, 0)
 shape = SubResource("RectangleShape2D_wall_v")
 
 [node name="Visual" type="Polygon2D" parent="WallLeft"]
-color = Color(0.2, 0.15, 0.19, 1)
+color = Color(0.55, 0.49, 0.55, 1)
 polygon = PackedVector2Array(-20, -1040, 20, -1040, 20, 1040, -20, 1040)
 
 [node name="WallRight" type="StaticBody2D" parent="."]
@@ -44,7 +44,7 @@ position = Vector2(1020, 0)
 shape = SubResource("RectangleShape2D_wall_v")
 
 [node name="Visual" type="Polygon2D" parent="WallRight"]
-color = Color(0.2, 0.15, 0.19, 1)
+color = Color(0.55, 0.49, 0.55, 1)
 polygon = PackedVector2Array(-20, -1040, 20, -1040, 20, 1040, -20, 1040)
 
 [node name="WallTop" type="StaticBody2D" parent="."]
@@ -54,7 +54,7 @@ position = Vector2(0, -1020)
 shape = SubResource("RectangleShape2D_wall_h")
 
 [node name="Visual" type="Polygon2D" parent="WallTop"]
-color = Color(0.22, 0.17, 0.21, 1)
+color = Color(0.58, 0.52, 0.58, 1)
 polygon = PackedVector2Array(-1040, -20, 1040, -20, 1040, 20, -1040, 20)
 
 [node name="WallBottom" type="StaticBody2D" parent="."]
@@ -64,5 +64,5 @@ position = Vector2(0, 1020)
 shape = SubResource("RectangleShape2D_wall_h")
 
 [node name="Visual" type="Polygon2D" parent="WallBottom"]
-color = Color(0.22, 0.17, 0.21, 1)
+color = Color(0.58, 0.52, 0.58, 1)
 polygon = PackedVector2Array(-1040, -20, 1040, -20, 1040, 20, -1040, 20)

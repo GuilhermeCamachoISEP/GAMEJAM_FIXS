@@ -1,31 +1,35 @@
 extends Node
 class_name ChecklistData
 
-## Tarefas por nível - Room1
+## Referência para presets no editor (opcional); o que vale para a saída é `begin_room_requirements`.
 @export var level_1_tasks: PackedStringArray = PackedStringArray(["view_symbols", "open_safe"])
 
 ## Tarefas Room4 - Sala dos Sons
 @export var room4_tasks: PackedStringArray = PackedStringArray(["r4_recorded_sequence", "r4_solved_bells"])
 
-## Tarefas do nível atual. Completar todas desbloqueia a saída (consultar LoopSystem).
-## O singleton em Autoload chama-se `ChecklistSystem` (instância desta classe).
+## Singleton em Autoload chama-se `ChecklistSystem`.
 
 signal checklist_changed
 
-## IDs das tarefas do nível 1 (MVP). Expandir por nível depois.
-
 var _completed: Dictionary = {} # task_id -> true
+var _active_tasks: PackedStringArray = []
 
 
-func _ready() -> void:
-	reset_for_level()
+func get_active_tasks() -> PackedStringArray:
+	return _active_tasks.duplicate()
+
+
+## Define as tarefas desta sala e repõe o progresso (chamar ao instanciar cada room).
+func begin_room_requirements(task_ids: PackedStringArray) -> void:
+	_active_tasks = task_ids.duplicate()
+	_completed.clear()
+	for t: String in _active_tasks:
+		_completed[t] = false
+	checklist_changed.emit()
 
 
 func reset_for_level() -> void:
-	_completed.clear()
-	for t: String in level_1_tasks:
-		_completed[t] = false
-	for t: String in room4_tasks:
+	for t: String in _active_tasks:
 		_completed[t] = false
 	checklist_changed.emit()
 
@@ -44,10 +48,12 @@ func is_task_done(task_id: String) -> bool:
 
 
 func is_level_complete() -> bool:
-	for t: String in level_1_tasks:
+	if _active_tasks.is_empty():
+		return false
+	for t: String in _active_tasks:
 		if not _completed.get(t, false):
 			return false
-	return not level_1_tasks.is_empty()
+	return true
 
 
 static func task_label(task_id: String) -> String:
@@ -56,6 +62,8 @@ static func task_label(task_id: String) -> String:
 			return "Ver os símbolos no quadro"
 		"open_safe":
 			return "Abrir o cofre"
+		"r2_code_entered":
+			return "Introduzir o código na Room 2"
 		"r4_recorded_sequence":
 			return "Gravar sequência na máquina (Room4)"
 		"r4_solved_bells":

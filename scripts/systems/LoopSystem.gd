@@ -90,6 +90,13 @@ func complete_level() -> void:
 	print("Nível completo!")
 
 
+## Entre salas na mesma `main.tscn`: volta a permitir o timer global e o fim do segmento.
+func prepare_next_room_segment() -> void:
+	_level_done = false
+	DayNightSystem.reset_run()
+	_start_level_timer()
+
+
 func _reset_state_flags() -> void:
 	state_flags["room1_bookshelf_moved"] = false
 	state_flags["room1_safe_opened"] = false
