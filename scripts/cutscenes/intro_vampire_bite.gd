@@ -119,12 +119,7 @@ func _outro() -> void:
 	tw.tween_property(_fade, "modulate:a", 1.0, 0.95) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	await tw.finished
-	
-	# Fallback caso CutsceneNav não exista
-	if has_node("/root/CutsceneNav"):
-		get_node("/root/CutsceneNav").change_scene(get_tree(), NEXT_SCENE)
-	else:
-		get_tree().change_scene_to_file(NEXT_SCENE)
+	CutsceneNav.change_scene(get_tree(), NEXT_SCENE)
 
 func _subtitle_hold(text: String, seconds: float) -> void:
 	_set_subtitle(text)
@@ -140,11 +135,7 @@ func _skip_to_game() -> void:
 		return
 	_running = false
 	_stop_speech()
-	
-	if has_node("/root/CutsceneNav"):
-		get_node("/root/CutsceneNav").change_scene(get_tree(), SKIP_GOES_TO)
-	else:
-		get_tree().change_scene_to_file(SKIP_GOES_TO)
+	CutsceneNav.change_scene(get_tree(), SKIP_GOES_TO)
 
 func _process(delta: float) -> void:
 	if _skippable_after_sec > 0.0:

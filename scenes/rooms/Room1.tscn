@@ -25,99 +25,99 @@ glow_intensity = 0.4
 glow_strength = 0.6
 glow_hdr_threshold = 0.78
 
-[node name="Room1" type="Node2D"]
+[node name="Room1" type="Node2D" unique_id=275074475]
 script = ExtResource("4_room1")
 
-[node name="Room" parent="." instance=ExtResource("1_room")]
+[node name="Room" parent="." unique_id=429995292 instance=ExtResource("1_room")]
 
-[node name="Quadro" type="Area2D" parent="."]
+[node name="Quadro" type="Area2D" parent="." unique_id=255951345]
 position = Vector2(0, -850)
 script = ExtResource("2_interact")
 completes_checklist_task = "view_symbols"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Quadro"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Quadro" unique_id=1153759341]
 shape = SubResource("RectangleShape2D_quadro")
 
-[node name="Visual" type="Polygon2D" parent="Quadro"]
+[node name="Visual" type="Polygon2D" parent="Quadro" unique_id=271100306]
 color = Color(0.38, 0.28, 0.2, 1)
 polygon = PackedVector2Array(-60, -40, 60, -40, 60, 40, -60, 40)
 
-[node name="Frame" type="Line2D" parent="Quadro"]
+[node name="Frame" type="Line2D" parent="Quadro" unique_id=1696668520]
+points = PackedVector2Array(-64, -44, 64, -44, 64, 44, -64, 44, -64, -44)
 width = 3.0
 default_color = Color(0.62, 0.42, 0.22, 1)
 joint_mode = 2
-points = PackedVector2Array(-64, -44, 64, -44, 64, 44, -64, 44, -64, -44)
 
-[node name="InnerLines" type="Line2D" parent="Quadro"]
+[node name="InnerLines" type="Line2D" parent="Quadro" unique_id=1973796688]
+points = PackedVector2Array(-40, -12, 40, -12, 40, 0, -35, 0, -35, 14, 38, 14)
 width = 1.5
 default_color = Color(0.25, 0.2, 0.16, 0.85)
-points = PackedVector2Array(-40, -12, 40, -12, 40, 0, -35, 0, -35, 14, 38, 14)
 
-[node name="Cofre" type="Area2D" parent="."]
+[node name="Cofre" type="Area2D" parent="." unique_id=445632919]
 position = Vector2(0, 880)
 script = ExtResource("2_interact")
 completes_checklist_task = "open_safe"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Cofre"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cofre" unique_id=1813554531]
 shape = SubResource("RectangleShape2D_cofre")
 
-[node name="Visual" type="Polygon2D" parent="Cofre"]
+[node name="Visual" type="Polygon2D" parent="Cofre" unique_id=1113113172]
 color = Color(0.16, 0.17, 0.22, 1)
 polygon = PackedVector2Array(-50, -50, 50, -50, 50, 50, -50, 50)
 
-[node name="Band" type="Polygon2D" parent="Cofre"]
+[node name="Band" type="Polygon2D" parent="Cofre" unique_id=326559742]
 z_index = 1
 color = Color(0.35, 0.38, 0.45, 1)
 polygon = PackedVector2Array(-52, -8, 52, -8, 52, 8, -52, 8)
 
-[node name="Dial" type="Polygon2D" parent="Cofre"]
+[node name="Dial" type="Polygon2D" parent="Cofre" unique_id=1513206038]
 z_index = 2
 color = Color(0.28, 0.3, 0.36, 1)
 polygon = PackedVector2Array(-18, -18, 18, -18, 18, 18, -18, 18)
 
-[node name="Rim" type="Line2D" parent="Cofre"]
+[node name="Rim" type="Line2D" parent="Cofre" unique_id=86312199]
 z_index = 2
+points = PackedVector2Array(-52, -52, 52, -52, 52, 52, -52, 52, -52, -52)
 width = 2.0
 default_color = Color(0.55, 0.48, 0.35, 1)
-points = PackedVector2Array(-52, -52, 52, -52, 52, 52, -52, 52, -52, -52)
 
-[node name="Porta" type="Area2D" parent="."]
+[node name="Porta" type="Area2D" parent="." unique_id=1478008756]
 position = Vector2(920, 0)
 script = ExtResource("2_interact")
 is_level_exit = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Porta"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Porta" unique_id=1262937069]
 shape = SubResource("RectangleShape2D_porta")
 
-[node name="Visual" type="Polygon2D" parent="Porta"]
+[node name="Visual" type="Polygon2D" parent="Porta" unique_id=1482781909]
 color = Color(0.26, 0.16, 0.12, 1)
 polygon = PackedVector2Array(-35, -70, 35, -70, 35, 70, -35, 70)
 
-[node name="Arch" type="Line2D" parent="Porta"]
+[node name="Arch" type="Line2D" parent="Porta" unique_id=1327598929]
+points = PackedVector2Array(-38, -72, 38, -72, 38, 72, -38, 72, -38, -72)
 width = 2.5
 default_color = Color(0.55, 0.38, 0.25, 0.95)
-points = PackedVector2Array(-38, -72, 38, -72, 38, 72, -38, 72, -38, -72)
 
-[node name="Handle" type="Polygon2D" parent="Porta"]
+[node name="Handle" type="Polygon2D" parent="Porta" unique_id=393383915]
 z_index = 1
 position = Vector2(22, 8)
 color = Color(0.55, 0.45, 0.28, 1)
 polygon = PackedVector2Array(-4, -6, 4, -6, 4, 6, -4, 6)
 
-[node name="ZonaVampiro" type="Area2D" parent="."]
+[node name="ZonaVampiro" type="Area2D" parent="." unique_id=1093833497]
 position = Vector2(-920, 0)
 script = ExtResource("2_interact")
 vampire_only = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaVampiro"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaVampiro" unique_id=926012205]
 shape = SubResource("RectangleShape2D_vamp")
 
-[node name="Visual" type="Polygon2D" parent="ZonaVampiro"]
+[node name="Visual" type="Polygon2D" parent="ZonaVampiro" unique_id=25744490]
 color = Color(0.42, 0.18, 0.55, 0.5)
 polygon = PackedVector2Array(-60, -50, 60, -50, 60, 50, -60, 50)
 
-[node name="CanvasModulate" type="CanvasModulate" parent="."]
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=682937339]
 script = ExtResource("3_eud5g")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1979033215]
 environment = SubResource("Environment_j0bqs")

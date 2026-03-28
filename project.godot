@@ -24,6 +24,7 @@ LoopSystem="*uid://4dmtaurhe8b5"
 App="*res://scripts/core/app.gd"
 Game="*res://scripts/core/game.gd"
 Settings="*res://scripts/core/settings.gd"
+CutsceneVoice="*uid://cpm7f04daais"
 
 [display]
 

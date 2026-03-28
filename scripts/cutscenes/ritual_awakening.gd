@@ -75,8 +75,8 @@ func _play() -> void:
 func _line_voice(bb: String, min_sec: float) -> void:
 	_set_subtitle(bb)
 	CutsceneVoice.speak(bb)
-	await CutsceneVoice.wait_line_finish(get_tree(), Callable(self, "_running_yes"), min_sec)
-
+	# Removemos o "get_tree()," daqui de dentro!
+	await CutsceneVoice.wait_line_finish(Callable(self, "_running_yes"), min_sec)
 
 func _running_yes() -> bool:
 	return _running
