@@ -225,13 +225,10 @@ func _cardinalize_direction(dir: Vector2) -> int:
 
 func _apply_top_down_facing(dir: Vector2) -> void:
 	_facing_cardinal = _cardinalize_direction(dir)
-	match _facing_cardinal:
-		_FACE_UP, _FACE_DOWN:
-			_visual.rotation = 0.0
-		_FACE_RIGHT:
-			_visual.rotation = PI * 0.5
-		_FACE_LEFT:
-			_visual.rotation = -PI * 0.5
+	
+	# We force the rotation to stay at 0.0 (upright) all the time
+	_visual.rotation = 0.0
+	
 	if _visual.has_method("set_facing"):
 		_visual.call("set_facing", _facing_cardinal)
 
@@ -265,6 +262,9 @@ func _physics_process(delta: float) -> void:
 
 	_update_facing_rotation()
 	_update_footsteps(delta)
+	
+	if _visual.has_method("set_moving"):
+		_visual.set_moving(velocity != Vector2.ZERO)
 
 
 func _begin_dash() -> void:
