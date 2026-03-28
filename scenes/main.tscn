@@ -1,16 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://cldkxnaf0uy2l"]
+[gd_scene format=3 uid="uid://cldkxnaf0uy2l"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://c1lad61w0sk0w" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/ui/game_hud.tscn" id="2_hud"]
-[ext_resource type="PackedScene" uid="uid://bsinsplayer001" path="res://scenes/player/Player.tscn" id="3_player"]
-[ext_resource type="PackedScene" uid="uid://dqroom1sinsv01" path="res://scenes/rooms/Room1.tscn" id="4_room1"]
+[ext_resource type="PackedScene" uid="uid://cadh1uco15m53" path="res://scenes/player/Player.tscn" id="3_player"]
+[ext_resource type="PackedScene" uid="uid://bnhfqkw7x5r4a" path="res://scenes/rooms/Room2.tscn" id="4_jyhfs"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="5_pause"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=276319574]
 script = ExtResource("1_main")
 
-[node name="GameHUD" parent="." instance=ExtResource("2_hud")]
+[node name="GameHUD" parent="." unique_id=1734609229 instance=ExtResource("2_hud")]
 
-[node name="Room1" parent="." instance=ExtResource("4_room1")]
+[node name="PauseMenu" parent="." instance=ExtResource("5_pause")]
 
-[node name="Player" parent="." instance=ExtResource("3_player")]
-position = Vector2(0, 0)
+[node name="Player" parent="." unique_id=708610383 instance=ExtResource("3_player")]
+
+[node name="Room2" parent="." unique_id=1878882432 instance=ExtResource("4_jyhfs")]

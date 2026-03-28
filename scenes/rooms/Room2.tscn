@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://bnhfqkw7x5r4a"]
+
+[ext_resource type="PackedScene" uid="uid://cvpyiiv0lt2kv" path="res://scenes/rooms/room.tscn" id="1_room"]
+[ext_resource type="Script" uid="uid://u6i8cn2wenhg" path="res://scenes/rooms/LuzDaSala.gd" id="2_luz"]
+[ext_resource type="Script" path="res://scripts/rooms/room2.gd" id="3_room2"]
+[ext_resource type="Script" path="res://scripts/rooms/room2_game_manager.gd" id="4_gm"]
+[ext_resource type="PackedScene" uid="uid://iui64c0ba005" path="res://scenes/puzzles/code_puzzle_room2.tscn" id="5_code"]
+
+[sub_resource type="Environment" id="Environment_room2"]
+background_mode = 3
+ambient_light_energy = 0.18
+glow_enabled = true
+glow_intensity = 0.4
+glow_strength = 0.6
+glow_hdr_threshold = 0.78
+
+[node name="Room2" type="Node2D" unique_id=1878882432]
+script = ExtResource("3_room2")
+
+[node name="Room" parent="." unique_id=867815630 instance=ExtResource("1_room")]
+
+[node name="Spawn" type="Marker2D" parent="." unique_id=1480267787]
+position = Vector2(0, 320)
+
+[node name="GameManager" type="Node2D" parent="." unique_id=866177482]
+script = ExtResource("4_gm")
+
+[node name="CodePuzzleRoom2" parent="." unique_id=2024524658 instance=ExtResource("5_code")]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1080078056]
+script = ExtResource("2_luz")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=951372197]
+environment = SubResource("Environment_room2")

@@ -134,3 +134,13 @@ Mesmo com reset:
 - Porta abre mais rápido a cada tentativa  
 
 💡 Dá sensação de progressão sem quebrar o loop
+
+---
+
+## Integração técnica (equipa)
+
+Fluxo de nível, reset, vitória e transições: ver **[docs/INTEGRATION.md](docs/INTEGRATION.md)** (papéis A/B/D e como encaixar sem conflitos em `project.godot`).
+
+Núcleo `App` + `Game`, autoloads e **bootstrap** como cena inicial: **[docs/CORE_AND_BOOTSTRAP.md](docs/CORE_AND_BOOTSTRAP.md)** (inclui como testar no editor).
+
+Contratos para menu / pausa / áudio / ecrã: **[docs/TEAM_CORE_API.md](docs/TEAM_CORE_API.md)**.
