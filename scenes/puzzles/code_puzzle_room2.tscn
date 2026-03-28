@@ -6,10 +6,10 @@
 [ext_resource type="Script" path="res://scripts/puzzles/interactable_area.gd" id="4_exit"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
-size = Vector2(56, 160)
+size = Vector2(72, 200)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_prox"]
-size = Vector2(140, 220)
+size = Vector2(180, 280)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
 size = Vector2(56, 100)
@@ -81,9 +81,78 @@ script = ExtResource("2_door")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=1859290220]
 shape = SubResource("RectangleShape2D_door")
 
-[node name="Visual" type="Polygon2D" parent="Door" unique_id=989868990]
-color = Color(0.32, 0.2, 0.16, 1)
-polygon = PackedVector2Array(-28, -80, 28, -80, 28, 80, -28, 80)
+; Grupo visual da porta com estrutura completa
+[node name="DoorVisual" type="Node2D" parent="Door" unique_id=989868990]
+
+; Moldura exterior da porta (arco gótico)
+[node name="Frame" type="Polygon2D" parent="Door/DoorVisual"]
+color = Color(0.25, 0.15, 0.12, 1)
+polygon = PackedVector2Array(-40, -110, 40, -110, 44, -106, 44, 106, 40, 110, -40, 110, -44, 106, -44, -106)
+
+; Interior da moldura
+[node name="FrameInner" type="Polygon2D" parent="Door/DoorVisual"]
+color = Color(0.18, 0.10, 0.08, 1)
+polygon = PackedVector2Array(-36, -106, 36, -106, 36, 106, -36, 106)
+
+; A porta em si (folha)
+[node name="Door" type="Polygon2D" parent="Door/DoorVisual"]
+color = Color(0.32, 0.20, 0.16, 1)
+polygon = PackedVector2Array(-32, -102, 32, -102, 32, 102, -32, 102)
+
+; Painéis decorativos na porta
+[node name="PanelTop" type="Polygon2D" parent="Door/DoorVisual"]
+color = Color(0.25, 0.15, 0.12, 1)
+polygon = PackedVector2Array(-22, -85, 22, -85, 22, -35, -22, -35)
+
+[node name="PanelBottom" type="Polygon2D" parent="Door/DoorVisual"]
+color = Color(0.25, 0.15, 0.12, 1)
+polygon = PackedVector2Array(-22, -15, 22, -15, 22, 85, -22, 85)
+
+; Bordas dos painéis
+[node name="PanelTopBorder" type="Line2D" parent="Door/DoorVisual"]
+width = 1.5
+default_color = Color(0.15, 0.08, 0.06, 1)
+points = PackedVector2Array(-22, -85, 22, -85, 22, -35, -22, -35, -22, -85)
+
+[node name="PanelBottomBorder" type="Line2D" parent="Door/DoorVisual"]
+width = 1.5
+default_color = Color(0.15, 0.08, 0.06, 1)
+points = PackedVector2Array(-22, -15, 22, -15, 22, 85, -22, 85, -22, -15)
+
+; Maçaneta
+[node name="KnobBase" type="Polygon2D" parent="Door/DoorVisual"]
+position = Vector2(-20, 0)
+color = Color(0.45, 0.35, 0.20, 1)
+polygon = PackedVector2Array(-6, -6, 6, -6, 6, 6, -6, 6)
+
+[node name="Knob" type="Polygon2D" parent="Door/DoorVisual"]
+position = Vector2(-20, 0)
+color = Color(0.55, 0.45, 0.28, 1)
+polygon = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
+
+; Arco decorativo no topo
+[node name="ArchDetail" type="Line2D" parent="Door/DoorVisual"]
+width = 2.0
+default_color = Color(0.20, 0.12, 0.10, 1)
+points = PackedVector2Array(-30, -102, -35, -110, 0, -118, 35, -110, 30, -102)
+
+; Detalhes de dobradiças
+[node name="HingeTop" type="Polygon2D" parent="Door/DoorVisual"]
+position = Vector2(-36, -70)
+color = Color(0.35, 0.25, 0.15, 1)
+polygon = PackedVector2Array(-4, -8, 4, -8, 4, 8, -4, 8)
+
+[node name="HingeBottom" type="Polygon2D" parent="Door/DoorVisual"]
+position = Vector2(-36, 70)
+color = Color(0.35, 0.25, 0.15, 1)
+polygon = PackedVector2Array(-4, -8, 4, -8, 4, 8, -4, 8)
+
+; Chão embaixo da porta
+[node name="Doorstep" type="Polygon2D" parent="Door/DoorVisual"]
+z_index = -1
+position = Vector2(0, 115)
+color = Color(0.20, 0.15, 0.12, 1)
+polygon = PackedVector2Array(-50, -5, 50, -5, 55, 8, -55, 8)
 
 [node name="ProximityArea" type="Area2D" parent="Door"]
 collision_layer = 0
@@ -98,9 +167,9 @@ shape = SubResource("RectangleShape2D_prox")
 [node name="HintLabel" type="Label" parent="Door"]
 z_index = 25
 offset_left = -120.0
-offset_top = -130.0
+offset_top = -150.0
 offset_right = 120.0
-offset_bottom = -86.0
+offset_bottom = -106.0
 theme_override_colors/font_color = Color(0.92, 0.88, 0.78, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.75)
 theme_override_constants/shadow_offset_x = 1

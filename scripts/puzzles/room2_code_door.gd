@@ -6,6 +6,12 @@ const MENU_SCENE := preload("res://scenes/puzzles/room2_door_code_menu.tscn")
 var _puzzle: Node2D
 var _menu: CanvasLayer
 var _player_near: bool = false
+var _is_unlocked: bool = false
+
+# Cores para diferentes estados
+const COLOR_LOCKED: Color = Color(0.55, 0.35, 0.28, 1)
+const COLOR_NEAR_DAY: Color = Color(0.75, 0.55, 0.45, 1)
+const COLOR_OPEN: Color = Color(0.42, 0.62, 0.38, 1)
 
 
 func _ready() -> void:
@@ -24,6 +30,7 @@ func _ready() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		_player_near = true
+		_update_visual_based_on_state()
 
 
 func _on_body_exited(body: Node2D) -> void:
@@ -32,6 +39,7 @@ func _on_body_exited(body: Node2D) -> void:
 		var hint: Label = $HintLabel as Label
 		if hint:
 			hint.visible = false
+		_update_visual_based_on_state()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -106,7 +114,11 @@ func _on_menu_closed() -> void:
 func open_door() -> void:
 	collision_layer = 0
 	collision_mask = 0
+	_is_unlocked = true
 	_apply_locked_visual(false)
+	# Animar abertura após breve delay
+	var timer := get_tree().create_timer(0.2)
+	timer.timeout.connect(_animate_door_open)
 
 
 func set_door_locked(locked: bool) -> void:
@@ -119,6 +131,52 @@ func set_door_locked(locked: bool) -> void:
 
 
 func _apply_locked_visual(locked: bool) -> void:
-	var v := get_node_or_null("Visual") as CanvasItem
-	if v:
-		v.modulate = Color(0.55, 0.35, 0.28, 1) if locked else Color(0.42, 0.62, 0.38, 1)
+	_is_unlocked = not locked
+	_update_visual_based_on_state()
+
+
+func _update_visual_based_on_state() -> void:
+	var door_visual := get_node_or_null("DoorVisual") as Node2D
+	if door_visual == null:
+		return
+
+	var frame := door_visual.get_node_or_null("Frame") as CanvasItem
+	var door := door_visual.get_node_or_null("Door") as CanvasItem
+
+	if _is_unlocked:
+		# Porta aberta - cor verde
+		if frame:
+			frame.modulate = COLOR_OPEN
+		if door:
+			door.modulate = COLOR_OPEN
+		# Animar abertura
+		_animate_door_open()
+	elif _player_near and _is_human_day_phase():
+		# Jogador perto durante o dia - cor mais clara
+		if frame:
+			frame.modulate = COLOR_NEAR_DAY
+		if door:
+			door.modulate = COLOR_NEAR_DAY
+	else:
+		# Estado normal - porta trancada
+		if frame:
+			frame.modulate = COLOR_LOCKED
+		if door:
+			door.modulate = COLOR_LOCKED
+
+
+func _animate_door_open() -> void:
+	var door_visual := get_node_or_null("DoorVisual") as Node2D
+	if door_visual == null:
+		return
+
+	var door := door_visual.get_node_or_null("Door") as Node2D
+	if door == null:
+		return
+
+	# Animação de abrir a porta (escala X diminui e roda ligeiramente)
+	var tw := create_tween()
+	tw.set_trans(Tween.TRANS_QUAD)
+	tw.set_ease(Tween.EASE_OUT)
+	tw.tween_property(door, "scale:x", 0.15, 0.4)
+	tw.parallel().tween_property(door, "rotation", -0.25, 0.4)

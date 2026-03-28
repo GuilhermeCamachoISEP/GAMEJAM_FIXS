@@ -8,7 +8,7 @@ const _FACE_LEFT: int = 3
 
 ## If true: walk in all directions (bird's-eye). If false: run/jump platformer (side-view gameplay).
 @export var top_down: bool = true
-@export var speed: float = 200.0
+@export var speed: float = 280.0
 @export var jump_velocity: float = -480.0
 @export var interact_distance: float = 50.0
 @export var dash_speed: float = 600.0

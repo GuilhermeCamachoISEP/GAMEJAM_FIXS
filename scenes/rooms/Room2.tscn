@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/rooms/room2_game_manager.gd" id="4_gm"]
 [ext_resource type="PackedScene" uid="uid://iui64c0ba005" path="res://scenes/puzzles/code_puzzle_room2.tscn" id="5_code"]
 [ext_resource type="PackedScene" uid="uid://torchvisring01" path="res://scenes/visual/torch_vision_ring.tscn" id="6_torch"]
+[ext_resource type="Script" path="res://scripts/ui/day_night_notification.gd" id="7_daynight"]
 
 ; ── Ambiente escuro vampírico ─────────────────────────────────────────────
 [sub_resource type="Environment" id="Environment_room2"]
@@ -827,5 +828,25 @@ script = ExtResource("4_gm")
 color = Color(0.35, 0.12, 0.32, 1)
 script = ExtResource("2_luz")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=951372197]
-environment = SubResource("Environment_room2")
+[node name="DayNightNotification" type="CanvasLayer" parent="."]
+script = ExtResource("7_daynight")
+layer = 40
+
+[node name="PhaseLabel" type="Label" parent="DayNightNotification"]
+z_index = 100
+anchors_preset = 10
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 20.0
+offset_right = 150.0
+offset_bottom = 60.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1.0, 0.95, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 28
+text = "Está de Noite!"
+horizontal_alignment = 1
+vertical_alignment = 1
