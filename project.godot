@@ -25,7 +25,6 @@ App="*res://scripts/core/app.gd"
 Game="*res://scripts/core/game.gd"
 Settings="*res://scripts/core/settings.gd"
 CutsceneVoice="*res://scripts/cutscenes/cutscene_voice.gd"
-VisionRingConstants="*res://scripts/visual/vision_ring_constants.gd"
 
 [display]
 

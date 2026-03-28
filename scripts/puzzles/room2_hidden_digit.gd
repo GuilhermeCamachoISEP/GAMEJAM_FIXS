@@ -1,6 +1,8 @@
 extends Node2D
 ## Dígito escondido na sala: só visível **dentro do círculo de visão** do jogador e na forma certa (vampiro = extremos, humano = centro).
 
+const _VisionRingConstants = preload("res://scripts/visual/vision_ring_constants.gd")
+
 @onready var _label: Label = $Label
 
 var _value: int = 0
@@ -23,5 +25,5 @@ func _process(_delta: float) -> void:
 	var p: Node2D = get_tree().get_first_node_in_group("player") as Node2D
 	var night: bool = DayNightSystem.is_night
 	var role_ok: bool = (night and _vampire_clue) or (not night and not _vampire_clue)
-	var near: bool = p != null and is_instance_valid(p) and global_position.distance_to(p.global_position) <= VisionRingConstants.WORLD_RADIUS
+	var near: bool = p != null and is_instance_valid(p) and global_position.distance_to(p.global_position) <= _VisionRingConstants.WORLD_RADIUS
 	_label.visible = role_ok and near
