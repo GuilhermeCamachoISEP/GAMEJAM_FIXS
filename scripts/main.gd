@@ -10,6 +10,7 @@ func _ready() -> void:
 	LoopSystem.level_completed.connect(_on_level_completed)
 	LoopSystem.level_failed.connect(_on_level_failed)
 	LoopSystem.start_level_session()
+	Game.notify_level_loaded()
 
 
 func _on_level_failed() -> void:
@@ -18,6 +19,4 @@ func _on_level_failed() -> void:
 
 
 func _on_level_completed() -> void:
-	if post_victory_scene.is_empty():
-		return
-	App.go_to_scene_deferred(post_victory_scene)
+	Game.go_to_post_victory(post_victory_scene)

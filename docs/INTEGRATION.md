@@ -15,10 +15,10 @@ O ficheiro **este repositório trata como ponto de contacto** para o fluxo globa
 ## Fluxo atual (Godot 4)
 
 1. **Arranque**  
-   `run/main_scene` aponta para `res://scenes/main.tscn` (ver secção A abaixo).
+   `run/main_scene` = `res://scenes/bootstrap.tscn` → após `App.application_ready`, carrega `Game.first_play_scene` (por defeito `res://scenes/main.tscn`). Detalhes: [CORE_AND_BOOTSTRAP.md](CORE_AND_BOOTSTRAP.md).
 
 2. **Início de nível**  
-   Em `_ready()` de `main.gd`, chama-se `LoopSystem.start_level_session()`, que:
+   Em `_ready()` de `main.gd`, chama-se `LoopSystem.start_level_session()` e `Game.notify_level_loaded()`, que:
    - repõe o temporizador global do nível;
    - chama `DayNightSystem.reset_run()` (noite + turnos).
 
@@ -28,19 +28,21 @@ O ficheiro **este repositório trata como ponto de contacto** para o fluxo globa
 4. **Vitória**  
    Com checklist completa, a saída (`interactable_area` com `is_level_exit`) chama `LoopSystem.complete_level()`, que emite `level_completed`.  
    - `GameHUD` deixa de atualizar timers (estado “fim”).  
-   - Se **A** (menu) ou outro nível existir: no nó **Main** em `main.tscn`, define-se `post_victory_scene` (export em `main.gd`) para o `.tscn` desejado; caso contrário a cena não muda (útil para testes).
+   - `main.gd` chama `Game.go_to_post_victory(post_victory_scene)`: path vazio → fase `LEVEL_WON` sem mudar de cena; com path → transição via `App`.
 
 ## Como **A** integra (menu e `main_scene`)
 
-1. Criar a cena do menu (ex. `res://scenes/menu.tscn`) com botão “Jogar” que faz `get_tree().change_scene_to_file("res://scenes/main.tscn")` (ou o path acordado para o nível 1).
+1. Manter **`run/main_scene`** = `res://scenes/bootstrap.tscn` (entrada única). Criar `res://scenes/menu.tscn` com botão “Jogar” que chama `App.go_to_scene("res://scenes/main.tscn")` (ou path acordado).
 
-2. **Coordenação com quem mantém `project.godot`:**  
-   - Quando o menu estiver pronto, **combinar no grupo** quem altera `application/run/main_scene` para o menu (em vez de ir direto a `main.tscn`).  
+2. Definir **`Game.first_play_scene`** = `res://scenes/menu.tscn` no autoload **Game** (ou valor por defeito em `scripts/core/game.gd`), para o bootstrap mostrar primeiro o menu.
+
+3. **Coordenação com quem mantém `project.godot`:**  
+   - Evitar mudar `run/main_scene` sem aviso; o fluxo canónico é bootstrap → `first_play_scene`.  
    - **No mesmo dia em que outra pessoa também editar `project.godot`**, alinhar antes para reduzir merges difíceis.
 
-3. **Vitória → menu:** no inspector do nó raiz **Main** em `main.tscn`, preencher **Post Victory Scene** com `res://scenes/menu.tscn` (ou equivalente).
+4. **Vitória → menu:** no inspector do nó raiz **Main** em `main.tscn`, preencher **Post Victory Scene** com `res://scenes/menu.tscn` (ou equivalente).
 
-4. **Commits:** alterações a **autoloads** em `project.godot` devem ir em **commits separados** dos restantes (regra de equipa).
+5. **Commits:** alterações a **autoloads** em `project.godot` devem ir em **commits separados** dos restantes (regra de equipa).
 
 ## Como **B** integra (salas e puzzles)
 
@@ -62,13 +64,10 @@ O ficheiro **este repositório trata como ponto de contacto** para o fluxo globa
 | `ChecklistSystem` | `scripts/systems/ChecklistSystem.gd` | Tarefas e progresso |
 | `DayNightSystem` | `scripts/systems/DayNightSystem.gd` | Dia/noite e turnos |
 | `InventorySystem` | `scripts/systems/InventorySystem.gd` | Itens (limpos no reset e ao amanhecer) |
-| `App` | `scripts/core/app.gd` | **Core:** arranque (`application_ready`) e mudança de cena; deve ser o **último** autoload |
+| `App` | `scripts/core/app.gd` | Arranque (`application_ready`) e mudança de cena penúltimo autoload |
+| `Game` | `scripts/core/game.gd` | **Core de domínio:** `RunPhase`, `first_play_scene`, `go_to_post_victory`; **último** autoload |
 
-Arquitetura detalhada (bootstrap, ordem, API): **[docs/CORE_AND_BOOTSTRAP.md](CORE_AND_BOOTSTRAP.md)**.
-
-### Entrada opcional via bootstrap
-
-`scenes/bootstrap.tscn` pode tornar-se `run/main_scene` quando existir menu ou pré‑carregamentos; até lá o projeto pode continuar a arrancar direto em `main.tscn` (comportamento atual).
+Arquitetura detalhada (bootstrap, ordem, **como testar**): **[docs/CORE_AND_BOOTSTRAP.md](CORE_AND_BOOTSTRAP.md)**.
 
 ## Git: reduzir conflitos
 

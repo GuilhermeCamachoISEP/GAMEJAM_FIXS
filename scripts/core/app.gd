@@ -1,7 +1,6 @@
 extends Node
 ## Fachada de arranque da aplicação e ponto único para mudanças de cena com validação.
-## Registar em **Project → Project Settings → Autoload** como `App`, **por último** na lista
-## (depois de `LoopSystem`, etc.), para garantir que os outros singletons já correram `_ready()`.
+## Autoload **antes** de `Game`. Ordem: sistemas de jogo → `App` → `Game`.
 ##
 ## Não substitui `LoopSystem` nem lógica de nível — apenas ordem de vida da app e navegação estável.
 

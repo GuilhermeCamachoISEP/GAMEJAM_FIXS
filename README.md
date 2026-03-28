@@ -141,4 +141,4 @@ Mesmo com reset:
 
 Fluxo de nível, reset, vitória e transições: ver **[docs/INTEGRATION.md](docs/INTEGRATION.md)** (papéis A/B/D e como encaixar sem conflitos em `project.godot`).
 
-Núcleo `App`, autoloads e bootstrap opcional: **[docs/CORE_AND_BOOTSTRAP.md](docs/CORE_AND_BOOTSTRAP.md)**.
+Núcleo `App` + `Game`, autoloads e **bootstrap** como cena inicial: **[docs/CORE_AND_BOOTSTRAP.md](docs/CORE_AND_BOOTSTRAP.md)** (inclui como testar no editor).

@@ -1,100 +1,106 @@
 # Core, autoloads e bootstrap
 
-Este documento explica o **núcleo técnico** do projeto Godot 4: o que são estes conceitos, como estão organizados aqui, e como evitar pisar o trabalho dos outros.
+Arquitetura de arranque e estado global para **Sins Of The Vamps** (Godot 4).
 
-## O que é cada conceito
+## Camadas (o que é “core” aqui)
 
-### Autoload (singleton)
+| Camada | Singleton | Função |
+|--------|-----------|--------|
+| **Motor / cena** | `App` | Sinal `application_ready`; `go_to_scene` / `go_to_scene_deferred` com validação e sinais de transição. |
+| **Jogo / run** | `Game` | Fases da corrida (`RunPhase`), path pós-bootstrap (`first_play_scene`), vitória com ou sem mudança de cena, falha antes do reload. |
+| **Sistemas** | `LoopSystem`, etc. | Regras de nível (tempo, checklist, dia/noite, inventário) — **inalterados** por esta arquitetura. |
 
-Um nó registado em **Project → Project Settings → Autoload** que o motor **cria uma única vez** ao iniciar o jogo e **mantém entre mudanças de cena**. Em GDScript acede-se pelo nome global (ex. `LoopSystem`, `App`).
+**Ordem dos Autoloads** (de cima para baixo no Project Settings):  
+`InventorySystem` → `ChecklistSystem` → `DayNightSystem` → `LoopSystem` → **`App`** → **`Game`**.
 
-Serve para:
+Quem está **em baixo** corre `_ready()` **depois** dos de cima. `Game` vem por último para poder ligar-se ao `App` e ao `LoopSystem` já instanciados.
 
-- estado e regras que atravessam várias cenas (inventário, dia/noite, tempo de nível);
-- um **único sítio** para operações globais (ex. mudar de cena com validação).
+## Fluxo real (como está o projeto)
 
-**Ordem na lista de autoloads** define a ordem dos `_ready()`: quem está **em cima** inicializa primeiro. O **`App`** deve ficar **por último**, para correr depois dos sistemas de jogo (`InventorySystem`, `ChecklistSystem`, `DayNightSystem`, `LoopSystem`).
-
-### Bootstrap (“arranque”)
-
-**Bootstrap** é o primeiro passo **controlado** depois dos autoloads: uma cena mínima (aqui: `scenes/bootstrap.tscn`) que:
-
-1. espera o núcleo da app estar **pronto** (`App.application_ready`);
-2. carrega a **primeira cena real** (nível, menu, splash, etc.).
-
-Vantagens:
-
-- separar **“motor ligado”** de **“primeiro ecrã de jogo”**;
-- no futuro, carregar configuração, splash ou menu **sem** espalhar `change_scene` por vários sítios;
-- a equipa **A** pode apontar `first_scene` para o menu sem mexer em `main.gd`.
-
-**Hoje** o `run/main_scene` continua a ser `main.tscn` por defeito (menos surpresas para quem já trabalha nessa cena). Quando quiserem cadeia menu → jogo, combinam mudar **só** `application/run/main_scene` para `bootstrap.tscn` e ajustar o export `first_scene`.
-
-### Core (`App`)
-
-**Core** aqui não é um módulo gigante — é a fachada **`App`** (`scripts/core/app.gd`):
-
-| Responsabilidade | Fora do `App` (mantido tal como está) |
-|------------------|----------------------------------------|
-| Sinalizar que autoloads + árvore inicial estabilizaram (`application_ready`) | Níveis, loops, checklists, dia/noite (`LoopSystem`, etc.) |
-| API de navegação `go_to_scene` / `go_to_scene_deferred` com validação e sinais | Regras de vitória/falha, puzzles, salas |
-
-Assim **ninguém precisa de duplicar** `ResourceLoader.exists` + `change_scene_to_file` em cada botão ou sala; e **signals** permitem UI Global (fade, som de transição) sem acoplar ao `main`.
-
-## Diagrama do fluxo de vida
+1. **`run/main_scene`** = `res://scenes/bootstrap.tscn`.
+2. Autoloads inicializam; `App` agenda o fim do boot; cena atual = **Bootstrap**.
+3. `bootstrap.gd`: `await App.application_ready` → `Game.notify_bootstrap_handoff()` → `App.go_to_scene(Game.first_play_scene)` (por defeito `main.tscn`).
+4. **`main.gd`**: `LoopSystem.start_level_session()` + `Game.notify_level_loaded()` → fase **`IN_LEVEL`**.
+5. **Falha de tempo**: `LoopSystem` emite `level_failed` → `Game` passa a **`LEVEL_FAILED_PENDING_RELOAD`** → reload da cena → `main` corre outra vez → **`IN_LEVEL`**.
+6. **Vitória**: `main` chama `Game.go_to_post_victory(post_victory_scene)` → **`LEVEL_WON`** (sem path) ou **`TRANSITIONING`** + mudança de cena.
 
 ```mermaid
-flowchart LR
-  subgraph engine [Motor]
-    AL[Autoloads por ordem]
-  end
-  subgraph boot [Opcional]
-    BS[bootstrap.tscn]
-  end
-  subgraph game [Jogo]
-    MN[main.tscn / menu / nível]
-  end
-  AL --> App_ready[App.application_ready]
-  App_ready --> BS
-  BS --> MN
-  AL --> MN
+sequenceDiagram
+  participant Boot as bootstrap.tscn
+  participant App as App
+  participant Game as Game
+  participant Main as main.tscn
+  Boot->>App: await application_ready
+  Boot->>Game: notify_bootstrap_handoff
+  Boot->>App: go_to_scene(first_play_scene)
+  App->>Main: change_scene
+  Main->>Game: notify_level_loaded
 ```
 
-- **Caminho atual (padrão):** autoloads → `main.tscn` direto (sem passar pelo bootstrap).
-- **Caminho futuro:** autoloads → `bootstrap.tscn` → `menu` ou `main.tscn`.
+## Ficheiros
 
-## Ficheiros envolvidos
-
-| Ficheiro | Função |
+| Ficheiro | Papel |
 |----------|--------|
-| `scripts/core/app.gd` | Singleton `App`: arranque + mudança de cena |
-| `scripts/bootstrap.gd` + `scenes/bootstrap.tscn` | Entrada opcional; export `first_scene` |
-| `project.godot` `[autoload]` | Última entrada: `App` |
-| `scripts/main.gd` | Vitória → `App.go_to_scene_deferred(post_victory_scene)` |
-
-## Integração com a equipa
-
-- **A (menu):** pode usar só `App.go_to_scene("res://scenes/main.tscn")` nos botões; quando existir menu, considerar `run/main_scene` = `bootstrap.tscn` e `first_scene` = menu.
-- **B (salas):** continua a instanciar em `main.tscn` (ou fluxo acordado). Não é obrigatório chamar `App` nas salas.
-- **D (conteúdo):** sem dependência do `App`.
-
-**Commits:** alterações apenas a `[autoload]` ou `run/main_scene` convém isolá-las em commits pequenos e combinar no grupo se várias pessoas mexerem no `project.godot` no mesmo dia.
-
-## API rápida do `App`
-
-```gdscript
-# Esperar arranque completo (ex. em bootstrap ou ferramentas)
-await App.application_ready
-
-# Mudança segura a partir de sinais / UI
-App.go_to_scene_deferred("res://scenes/menu.tscn")
-
-# Mudança imediata (só quando já estás num frame “seguro”)
-var err: Error = App.go_to_scene("res://scenes/main.tscn")
-```
-
-Sinais úteis: `scene_change_started(path)`, `scene_change_finished` — para fade ou áudio de transição.
+| `scripts/core/app.gd` | Arranque estável + navegação entre `.tscn`. |
+| `scripts/core/game.gd` | Estado `RunPhase` + `first_play_scene` + `go_to_post_victory`. |
+| `scripts/bootstrap.gd` + `scenes/bootstrap.tscn` | Entrada do exe/projecto. |
+| `scripts/main.gd` | Sessão de nível + chamadas a `Game`. |
+| `project.godot` | `run/main_scene` + lista de autoloads. |
 
 ---
 
-*Alinhado com `docs/INTEGRATION.md` e com os sistemas existentes em `scripts/systems/`.*
+## Como ver **tudo** a funcionar (passo a passo)
+
+### 1. Correr o jogo normal (F5)
+
+- O projeto **entra** em `bootstrap` (podes não notar — é instantâneo) e **acaba** em `main.tscn`.
+- O jogo deve comportar-se **como antes** a nível de jogabilidade.
+
+### 2. Ver o **bootstrap** e o **App** na consola
+
+1. Abre **Editor → Editor Settings** (opcional) ou usa **Output** em baixo.
+2. Em `scripts/core/app.gd`, dentro de `_complete_boot()`, podes acrescentar **temporariamente**:  
+   `print("[App] application_ready")`
+3. Em `scripts/bootstrap.gd`, antes de `App.go_to_scene`:  
+   `print("[Bootstrap] → ", path)`
+4. **F5** — na **Output** deves ver primeiro as mensagens do `App` (após dois frames), depois o `Bootstrap` com o path para `main.tscn`.
+
+Remove os `print` quando não precisares (evita poluir a build).
+
+### 3. Ver as **fases** do `Game` (`RunPhase`)
+
+1. **Project → Project Settings → Autoload**.
+2. Seleciona **`Game`** na lista (em Godot 4 podes precisar de editar o recurso ou abrir o script e usar valores por defeito).
+3. Ativa **`debug_log_phases`** no inspector do script **se** o editor mostrar as propriedades exportadas do autoload; se não aparecerem, abre `scripts/core/game.gd` e põe **temporariamente** `debug_log_phases: bool = true` no `@export`.
+4. **F5** — na **Output** esperas uma sequência do tipo:
+   - `APPLICATION_READY`
+   - `ENTERING_FIRST_SCENE`
+   - `IN_LEVEL`  
+   Após **falha** de nível: `LEVEL_FAILED_PENDING_RELOAD`, depois outra vez `IN_LEVEL`.  
+   Após **vitória** sem `post_victory_scene`: `LEVEL_WON`.
+
+### 4. Ver **transição** pós-vitória
+
+1. Abre `scenes/main.tscn` → nó **Main** → preenche **Post Victory Scene** com um `.tscn` de teste (podes duplicar `main` ou criar uma cena vazia).
+2. Joga até completar o nível e sair pela porta.
+3. Esperado: `Game` passa a **`TRANSITIONING`** e a cena muda (e logs de `App` se adicionares prints aos sinais `scene_change_*`).
+
+### 5. Menu (equipa **A**) — ponto de extensão
+
+- Deixa **`run/main_scene`** = `bootstrap.tscn`.
+- Altera **`Game.first_play_scene`** para `res://scenes/menu.tscn` (quando existir).
+- No menu, botão “Jogar”: `App.go_to_scene("res://scenes/main.tscn")` (ou path acordado).
+
+## API rápida
+
+```gdscript
+await App.application_ready
+App.go_to_scene_deferred("res://scenes/main.tscn")
+Game.go_to_post_victory("res://scenes/menu.tscn")
+Game.run_phase  # leitura do estado atual
+Game.run_phase_changed.connect(func(p): pass)
+```
+
+---
+
+*Ver também [INTEGRATION.md](INTEGRATION.md) para papéis A/B/D.*
