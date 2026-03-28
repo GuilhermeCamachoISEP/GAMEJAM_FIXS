@@ -1,7 +1,7 @@
 extends Node2D
 ## Abertura: noite na mansão, vampiro aproxima-se e morde o jogador (torna-se vampiro). Depois → `main.tscn`.
 
-const NEXT_SCENE: String = "res://scenes/main.tscn"
+const NEXT_SCENE: String = GamePaths.MAIN_LEVEL
 
 const HUMAN_FACE_FLIP := Vector2(-1.0, 1.0)
 

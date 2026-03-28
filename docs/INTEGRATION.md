@@ -69,6 +69,8 @@ O ficheiro **este repositório trata como ponto de contacto** para o fluxo globa
 
 Arquitetura detalhada (bootstrap, ordem, **como testar**): **[docs/CORE_AND_BOOTSTRAP.md](CORE_AND_BOOTSTRAP.md)**.
 
+API para **menu, pausa, áudio, ecrã** (núcleo sem pisar player/salas): **[docs/TEAM_CORE_API.md](TEAM_CORE_API.md)**.
+
 ## Git: reduzir conflitos
 
 - **Pull antes de editar** ficheiros partilhados.

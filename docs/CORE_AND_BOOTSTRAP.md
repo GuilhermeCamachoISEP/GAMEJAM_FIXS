@@ -46,7 +46,10 @@ Se o editor mostrar **`Unrecognized UID`** para `Game` ou `App`, o `project.godo
 | Ficheiro | Papel |
 |----------|--------|
 | `scripts/core/app.gd` | Arranque estável + navegação entre `.tscn`. |
-| `scripts/core/game.gd` | Estado `RunPhase` + `first_play_scene` + `go_to_post_victory`. |
+| `scripts/core/game.gd` | Estado `RunPhase` + `first_play_scene` + `go_to_post_victory` + **pausa** (`set_game_paused`). |
+| `scripts/core/settings.gd` | Autoload **Settings**: volumes, fullscreen, vsync, `user://settings.cfg`. |
+| `scripts/core/game_paths.gd` | Classe `GamePaths` (caminhos de cenas). |
+| `scripts/core/audio_buses.gd` | Classe `AudioBuses` (Master / Music / SFX). |
 | `scripts/bootstrap.gd` + `scenes/bootstrap.tscn` | Entrada do exe/projecto. |
 | `scripts/main.gd` | Sessão de nível + chamadas a `Game`. |
 | `project.godot` | `run/main_scene` + lista de autoloads. |

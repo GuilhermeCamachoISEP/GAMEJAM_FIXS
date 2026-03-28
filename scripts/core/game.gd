@@ -3,6 +3,8 @@ extends Node
 ## Colocado **depois** de `App` nos Autoloads. Não duplica timers nem checklist — só estado de alto nível e navegação coerente.
 
 signal run_phase_changed(phase: RunPhase)
+## `get_tree().paused` é a fonte de verdade; o menu de pausa deve usar `set_game_paused` para todo o jogo reagir igual.
+signal game_pause_changed(is_paused: bool)
 
 enum RunPhase {
 	STARTUP,
@@ -82,4 +84,25 @@ func go_to_post_victory(scene_path: String) -> void:
 		_set_phase(RunPhase.LEVEL_WON)
 		return
 	_set_phase(RunPhase.TRANSITIONING)
-	App.go_to_scene_deferred(scene_path)
+	var app: Node = get_tree().root.get_node_or_null("App")
+	if app != null and app.has_method("go_to_scene_deferred"):
+		app.call("go_to_scene_deferred", scene_path)
+	else:
+		push_error("Game: autoload App em falta.")
+
+
+func set_game_paused(is_paused: bool) -> void:
+	if get_tree().paused == is_paused:
+		return
+	get_tree().paused = is_paused
+	game_pause_changed.emit(is_paused)
+
+
+func is_game_paused() -> bool:
+	return get_tree().paused
+
+
+## Útil em UI de pausa: alterna e devolve o novo estado.
+func toggle_game_paused() -> bool:
+	set_game_paused(not get_tree().paused)
+	return get_tree().paused

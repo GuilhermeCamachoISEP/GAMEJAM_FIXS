@@ -7,6 +7,7 @@ extends Node2D
 
 
 func _ready() -> void:
+	add_to_group("gameplay")
 	LoopSystem.level_completed.connect(_on_level_completed)
 	LoopSystem.level_failed.connect(_on_level_failed)
 	LoopSystem.start_level_session()

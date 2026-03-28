@@ -37,6 +37,9 @@ func go_to_scene(scene_path: String) -> Error:
 		push_warning("App.go_to_scene: ficheiro inexistente: %s" % scene_path)
 		return ERR_FILE_NOT_FOUND
 
+	## Nova cena arranca sempre despausada (evita ficar preso após pausa no menu/nível).
+	get_tree().paused = false
+
 	scene_change_started.emit(scene_path)
 	var err: Error = get_tree().change_scene_to_file(scene_path)
 	if err != OK:
