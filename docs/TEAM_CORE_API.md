@@ -61,6 +61,13 @@ A **`Game.first_play_scene`** continua a ser o ponto de entrada pós-bootstrap (
 - Resolução base **1280×720**; UI com anchors/margins para diferentes rácios.
 - Fullscreen/vsync via `Settings` acima.
 
+## Cutscenes e TTS (narração)
+
+- Cutscenes usam **`CutsceneVoice`**: `DisplayServer.tts_speak` com voz **portuguesa** quando o sistema expõe uma (`language` começa por `pt` ou contém `por`).
+- **Windows:** costuma haver vozes PT‑PT / PT‑BR nas definições de *Text-to-speech*; sem voz PT, cai na primeira voz disponível.
+- **Linux / Web / consolas:** TTS pode estar indisponível — as legendas mantêm-se; só o áudio sintético falha em silêncio.
+- **Saltar** numa cutscene chama `CutsceneVoice.stop()` para calar a locução.
+
 ## O que ficou **de fora** (outros owners)
 
 - Arte e layout do **menu**, **pause overlay**, **créditos**.

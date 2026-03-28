@@ -11,7 +11,9 @@ func _ready() -> void:
 	LoopSystem.level_completed.connect(_on_level_completed)
 	LoopSystem.level_failed.connect(_on_level_failed)
 	LoopSystem.start_level_session()
-	Game.notify_level_loaded()
+	var game_node: Node = get_tree().root.get_node_or_null("Game")
+	if game_node != null and game_node.has_method("notify_level_loaded"):
+		game_node.call("notify_level_loaded")
 
 
 func _on_level_failed() -> void:
@@ -20,4 +22,6 @@ func _on_level_failed() -> void:
 
 
 func _on_level_completed() -> void:
-	Game.go_to_post_victory(post_victory_scene)
+	var game_node: Node = get_tree().root.get_node_or_null("Game")
+	if game_node != null and game_node.has_method("go_to_post_victory"):
+		game_node.call("go_to_post_victory", post_victory_scene)

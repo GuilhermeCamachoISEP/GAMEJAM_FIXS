@@ -15,7 +15,7 @@ O ficheiro **este repositório trata como ponto de contacto** para o fluxo globa
 ## Fluxo atual (Godot 4)
 
 1. **Arranque**  
-   `run/main_scene` = `res://scenes/bootstrap.tscn` → após `App.application_ready`, carrega `Game.first_play_scene` (por defeito `res://scenes/cutscenes/intro_vampire_bite.tscn`, depois `main.tscn`). Detalhes: [CORE_AND_BOOTSTRAP.md](CORE_AND_BOOTSTRAP.md).
+   `run/main_scene` = `res://scenes/bootstrap.tscn` → `Game.first_play_scene` (por defeito intro **I**, depois cutscene **II** `ritual_awakening.tscn`, e só então `main.tscn`). Saltar na intro vai direto ao nível. Detalhes: [CORE_AND_BOOTSTRAP.md](CORE_AND_BOOTSTRAP.md).
 
 2. **Início de nível**  
    Em `_ready()` de `main.gd`, chama-se `LoopSystem.start_level_session()` e `Game.notify_level_loaded()`, que:

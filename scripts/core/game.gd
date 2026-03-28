@@ -27,8 +27,12 @@ var run_phase: RunPhase = RunPhase.STARTUP
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	App.application_ready.connect(_on_app_ready, CONNECT_ONE_SHOT)
-	LoopSystem.level_failed.connect(_on_level_failed)
+	var app_node: Node = get_tree().root.get_node_or_null("App")
+	if app_node != null and app_node.has_signal("application_ready"):
+		app_node.connect("application_ready", Callable(self, "_on_app_ready"), CONNECT_ONE_SHOT)
+	var loop_node: Node = get_tree().root.get_node_or_null("LoopSystem")
+	if loop_node != null and loop_node.has_signal("level_failed"):
+		loop_node.connect("level_failed", Callable(self, "_on_level_failed"))
 
 
 func _set_phase(next: RunPhase) -> void:

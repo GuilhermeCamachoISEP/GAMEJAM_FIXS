@@ -1,7 +1,8 @@
 extends Node2D
-## Abertura: noite na mansão, vampiro aproxima-se e morde o jogador (torna-se vampiro). Depois → `main.tscn`.
+## Cutscene I — mordida do vampiro. TTS em português (`DisplayServer.tts_*`). Segue para **ritual_awakening**; saltar vai direto ao nível.
 
-const NEXT_SCENE: String = GamePaths.MAIN_LEVEL
+const NEXT_SCENE: String = "res://scenes/cutscenes/ritual_awakening.tscn"
+const SKIP_GOES_TO: String = "res://scenes/main.tscn"
 
 const HUMAN_FACE_FLIP := Vector2(-1.0, 1.0)
 
@@ -40,6 +41,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		_skip_to_game()
 
 
+func _running_yes() -> bool:
+	return _running
+
+
 func _play() -> void:
 	var open := create_tween()
 	open.tween_property(_fade, "modulate:a", 0.0, 1.05).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
@@ -55,24 +60,28 @@ func _play() -> void:
 
 
 func _beats() -> void:
-	await _subtitle_hold("Estás na sala. A noite acaba de cair…", 2.5)
+	await _subtitle_hold("[i]Capítulo I — A Mordida[/i]", 2.35)
+	if not _running:
+		return
+
+	await _subtitle_hold("Estás na sala. A noite acaba de cair…", 2.65)
 	if not _running:
 		return
 
 	_set_subtitle("Ouves passos. Uma sombra aproxima-se.")
-	## Um único await no tween — evita ficar preso entre timer e Tween.finished.
+	CutsceneVoice.speak("Ouves passos. Uma sombra aproxima-se.")
 	var approach := create_tween()
 	approach.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUINT)
 	approach.tween_property(_vampire, "position:x", -95.0, 3.2)
 	await approach.finished
 	if not _running:
 		return
+	await CutsceneVoice.wait_line_finish(get_tree(), Callable(self, "_running_yes"), 0.35)
 
-	await _subtitle_hold("Ele inclina-se para ti…", 1.1)
+	await _subtitle_hold("Ele inclina-se para ti…", 1.25)
 	if not _running:
 		return
 
-	## Aproximação final + mordida (flash + escala mantendo o flip do humano).
 	var lunge := create_tween()
 	lunge.set_parallel(true)
 	lunge.tween_property(_vampire, "position:x", -35.0, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
@@ -81,7 +90,9 @@ func _beats() -> void:
 	if not _running:
 		return
 
-	_set_subtitle("— A mordida.")
+	await _subtitle_hold("— A mordida.", 0.75)
+	if not _running:
+		return
 
 	var bite := create_tween()
 	bite.set_parallel(true)
@@ -104,25 +115,25 @@ func _beats() -> void:
 		return
 
 	await _subtitle_hold(
-		"A mordida queima nas veias. Já não és só humano — és vampiro.\nO teu primeiro loop começa.",
-		4.6
+		"A mordida queima nas veias. Já não és só humano — és vampiro.\n" +
+		"Agora ouves outra voz: o eco do que vais tornar-te.",
+		5.2
 	)
 
 
 func _outro() -> void:
 	_running = false
+	CutsceneVoice.stop()
 	var tw := create_tween()
 	tw.tween_property(_fade, "modulate:a", 1.0, 0.95).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	await tw.finished
-	_go_to_main_scene()
+	CutsceneNav.change_scene(get_tree(), NEXT_SCENE)
 
 
 func _subtitle_hold(text: String, seconds: float) -> void:
 	_set_subtitle(text)
-	if seconds <= 0.0:
-		return
-	## Timer simples; ignore_time_scale evita cortar a cutscene se o tempo do jogo mudar.
-	await get_tree().create_timer(seconds, false, true).timeout
+	CutsceneVoice.speak(text)
+	await CutsceneVoice.wait_line_finish(get_tree(), Callable(self, "_running_yes"), maxf(seconds, 0.55))
 
 
 func _set_subtitle(bb_text: String) -> void:
@@ -134,18 +145,8 @@ func _skip_to_game() -> void:
 	if _skippable_after_sec > 0.0:
 		return
 	_running = false
-	_go_to_main_scene()
-
-
-func _go_to_main_scene() -> void:
-	## Evita depender do identificador global `App` no compilador (autoload nem sempre exposto como nome global).
-	var app := get_tree().root.get_node_or_null("App")
-	if app != null and app.has_method("go_to_scene"):
-		app.call("go_to_scene", NEXT_SCENE)
-	elif ResourceLoader.exists(NEXT_SCENE):
-		get_tree().change_scene_to_file(NEXT_SCENE)
-	else:
-		push_error("IntroCutscene: cena inválida: %s" % NEXT_SCENE)
+	CutsceneVoice.stop()
+	CutsceneNav.change_scene(get_tree(), SKIP_GOES_TO)
 
 
 func _process(delta: float) -> void:
