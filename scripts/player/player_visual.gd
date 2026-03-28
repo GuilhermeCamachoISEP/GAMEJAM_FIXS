@@ -1,10 +1,7 @@
 extends Node2D
 
-## Player visual using sprites (placeholder textures, replace with actual PNGs)
-## The scene should have two Sprite2D nodes: VampireSprite and HumanSprite
-
-@onready var _vampire_sprite: Sprite2D = $VampireSprite
-@onready var _human_sprite: Sprite2D = $HumanSprite
+## Desenho “massinha”: círculos/elipses suaves; vampiro com capa, humano com roupa simples.
+## O pai (`Player`) roda este nó para apontar na direção do movimento.
 
 var _night: bool = true
 
@@ -12,62 +9,68 @@ var _night: bool = true
 func _ready() -> void:
 	_night = DayNightSystem.is_night
 	DayNightSystem.phase_changed.connect(_on_phase)
-	_update_sprite_visibility()
-
-	# Create placeholder textures if sprites exist but have no texture
-	_setup_placeholder_textures()
-
-
-func _setup_placeholder_textures() -> void:
-	## Creates simple colored placeholder textures - replace with actual sprites
-	if _vampire_sprite and _vampire_sprite.texture == null:
-		_vampire_sprite.texture = _create_placeholder_texture(
-			Color(0.18, 0.06, 0.12),  # Dark burgundy
-			Vector2i(64, 80)
-		)
-	if _human_sprite and _human_sprite.texture == null:
-		_human_sprite.texture = _create_placeholder_texture(
-			Color(0.58, 0.48, 0.38),  # Warm brown
-			Vector2i(48, 64)
-		)
-
-
-func _create_placeholder_texture(color: Color, size: Vector2i) -> ImageTexture:
-	## Creates a simple colored rectangle as placeholder
-	var img := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
-	img.fill(color)
-	# Add a lighter edge for visibility
-	var edge_color := color.lightened(0.2)
-	for x in range(size.x):
-		img.set_pixel(x, 0, edge_color)
-		img.set_pixel(x, size.y - 1, edge_color)
-	for y in range(size.y):
-		img.set_pixel(0, y, edge_color)
-		img.set_pixel(size.x - 1, y, edge_color)
-
-	var tex := ImageTexture.create_from_image(img)
-	return tex
+	queue_redraw()
 
 
 func _on_phase(is_night: bool) -> void:
 	_night = is_night
-	_update_sprite_visibility()
+	queue_redraw()
 
 
-func _update_sprite_visibility() -> void:
-	if _vampire_sprite:
-		_vampire_sprite.visible = _night
-	if _human_sprite:
-		_human_sprite.visible = not _night
+func _draw() -> void:
+	if _night:
+		_draw_vampire()
+	else:
+		_draw_human()
 
 
-## Called by player.gd for effects - placeholder for future sprite animations
-func set_light_pulse_intensity(intensity: float) -> void:
-	## Reserved for future sprite-based effects (e.g., vampire eye glow)
-	## You can implement modulate or shader effects here when using actual sprites
-	if _night and _vampire_sprite:
-		# Subtle glow effect on vampire during night
-		var glow := 0.85 + intensity * 0.15
-		_vampire_sprite.modulate = Color(glow, glow * 0.9, glow * 0.95, 1.0)
-	elif _human_sprite:
-		_human_sprite.modulate = Color.WHITE
+func _soft_circle(center: Vector2, radius: float, fill: Color, edge_mul: float = 1.12) -> void:
+	var edge := fill.darkened(0.12)
+	edge.a = minf(fill.a + 0.08, 1.0)
+	draw_colored_polygon(SoftShapes.circle_poly(center, radius * edge_mul, 28), edge)
+	draw_colored_polygon(SoftShapes.circle_poly(center, radius, 28), fill)
+
+
+func _soft_ellipse(center: Vector2, rx: float, ry: float, fill: Color, edge_mul: float = 1.08) -> void:
+	var edge := fill.darkened(0.1)
+	edge.a = minf(fill.a + 0.06, 1.0)
+	draw_colored_polygon(SoftShapes.ellipse_poly(center, rx * edge_mul, ry * edge_mul, 36), edge)
+	draw_colored_polygon(SoftShapes.ellipse_poly(center, rx, ry, 36), fill)
+
+
+func _draw_vampire() -> void:
+	var cape := Color(0.2, 0.09, 0.16, 1.0)
+	var cape_hi := Color(0.28, 0.12, 0.22, 1.0)
+	var trim := Color(0.48, 0.22, 0.32, 1.0)
+	var body := Color(0.24, 0.1, 0.18, 1.0)
+	var head := Color(0.76, 0.68, 0.78, 1.0)
+
+	# Capa (atrás do corpo: eixo local +Y)
+	_soft_ellipse(Vector2(0, 18), 40.0, 22.0, cape)
+	_soft_ellipse(Vector2(0, 14), 28.0, 14.0, cape_hi)
+
+	# Barra decorativa na base da capa (arco suave)
+	draw_arc(Vector2(0, 22), 30.0, PI * 0.12, PI * 0.88, 36, trim, 3.5, true)
+
+	# Corpo
+	_soft_circle(Vector2(0, 2), 15.5, body)
+	# Cabeça
+	_soft_circle(Vector2(0, -22), 12.0, head)
+
+
+func _draw_human() -> void:
+	var shirt := Color(0.5, 0.42, 0.36, 1.0)
+	var shirt_dark := Color(0.4, 0.34, 0.3, 1.0)
+	var sleeve := Color(0.44, 0.38, 0.34, 1.0)
+	var head := Color(0.92, 0.82, 0.72, 1.0)
+
+	# Torso arredondado
+	_soft_ellipse(Vector2(0, 5), 18.0, 22.0, shirt)
+	_soft_ellipse(Vector2(0, 6), 14.0, 18.0, shirt_dark)
+
+	# Mangas (bolinhas)
+	_soft_circle(Vector2(-21, 3), 8.5, sleeve)
+	_soft_circle(Vector2(21, 3), 8.5, sleeve)
+
+	# Cabeça
+	_soft_circle(Vector2(0, -22), 12.0, head)

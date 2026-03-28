@@ -1,11 +1,10 @@
 extends Node2D
-## Ghost trail for dash - uses colored placeholder shapes
-## When actual sprites are added, this can be updated to use sprite references
+
+## Simplified ghost trail that fades out after dash
 
 var _is_night: bool = true
 var _alpha: float = 0.6
 var _color: Color = Color.WHITE
-
 
 func set_ghost_color(night: bool) -> void:
 	_is_night = night
@@ -17,22 +16,38 @@ func set_ghost_color(night: bool) -> void:
 		_color = Color(0.58, 0.48, 0.38, _alpha)  # Warm brown for human
 	queue_redraw()
 
-
 func _ready() -> void:
 	queue_redraw()
 
-
 func _draw() -> void:
-	# Draw a simplified ghost shape - colored ellipse
-	var size := Vector2(48.0, 64.0)
-	var center := Vector2.ZERO
+	if _is_night:
+		_draw_vampire_ghost()
+	else:
+		_draw_human_ghost()
 
-	# Draw ghost body
-	var pts := SoftShapes.ellipse_poly(center, size.x * 0.5, size.y * 0.5, 24)
-	draw_colored_polygon(pts, _color)
+func _soft_circle(center: Vector2, radius: float, fill: Color) -> void:
+	var edge := fill.darkened(0.12)
+	edge.a = minf(fill.a + 0.08, 1.0)
+	draw_colored_polygon(SoftShapes.circle_poly(center, radius * 1.12, 20), edge)
+	draw_colored_polygon(SoftShapes.circle_poly(center, radius, 20), fill)
 
-	# Draw highlight edge
-	var edge_color := _color.lightened(0.15)
-	var edge_pts := SoftShapes.ellipse_poly(center, size.x * 0.55, size.y * 0.55, 24)
-	draw_colored_polygon(edge_pts, edge_color)
-	draw_colored_polygon(pts, _color)
+func _draw_vampire_ghost() -> void:
+	var cape := Color(0.2, 0.09, 0.16, _alpha * 0.5)
+	var body := Color(0.24, 0.1, 0.18, _alpha * 0.7)
+	var head := Color(0.76, 0.68, 0.78, _alpha * 0.8)
+
+	# Simplified cape
+	_soft_circle(Vector2(0, 18), 38.0, cape)
+	# Body
+	_soft_circle(Vector2(0, 2), 14.0, body)
+	# Head
+	_soft_circle(Vector2(0, -22), 11.0, head)
+
+func _draw_human_ghost() -> void:
+	var shirt := Color(0.5, 0.42, 0.36, _alpha * 0.6)
+	var head := Color(0.92, 0.82, 0.72, _alpha * 0.8)
+
+	# Simplified torso
+	_soft_circle(Vector2(0, 5), 16.0, shirt)
+	# Head
+	_soft_circle(Vector2(0, -22), 11.0, head)

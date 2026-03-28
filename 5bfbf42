@@ -1,0 +1,36 @@
+[33mc4e1a5b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge
+[33m2bb9aa2[m Room4
+[33m5bfbf42[m Merge branch 'main' of https://github.com/GuilhermeCamachoISEP/GAMEJAM_FIXS
+[33m6a03074[m mudancas aparencia do player
+[33m942d649[m 12aaaaaaaaaaaaaaaaaaaaaaaa
+[33m2345527[m Merge branch 'main' of https://github.com/GuilhermeCamachoISEP/GAMEJAM_FIXS
+[33md16b56e[m Player updates
+[33m379471c[m fix(ui): pause menu only opens with ESC key
+[33m5a324eb[m feat(scene): add PauseMenu to main.tscn
+[33mfaceb1a[m carnes
+[33m0b9570b[m fix(ui): force fullscreen toggle with DisplayServer
+[33m8919bda[m feat(ui): play button goes through intro cutscene
+[33mb26037a[m core: set main menu as first scene after bootstrap
+[33m64566d9[m feat(ui): add pause menu overlay
+[33mbab368e[m feat(ui): add main menu with play/options/quit
+[33m553fcdd[m Room 2 implementation
+[33md05cb05[m commit ig
+[33m1c29349[m chore: ficheiros .uid do Godot para scripts core
+[33ma2516d0[m fix: autoloads sem App/Game global; cutscene II + TTS PT; CutsceneNav
+[33m24e23ce[m feat(core): Settings, AudioBuses, GamePaths, API pausa e ecrã
+[33m72a7f82[m fix(cutscene): transição sem identificador global App (get_node + fallback)
+[33m380bd6b[m fix(cutscene): sequência da mordida fiável + vampiro mais detalhado
+[33m68e09a4[m feat(cutscene): abertura mordida do vampiro antes do nível
+[33mf979d06[m fix(autoload): Game e App por res:// (evita UID não reconhecido)
+[33m60773e4[m chore(bootstrap): metadados da cena alinhados ao Godot
+[33m54d2d05[m feat(core): bootstrap como main_scene e singleton Game (RunPhase)
+[33m51a6a5e[m feat(core): singleton App, bootstrap opcional e documentação
+[33m552dcd2[m feat(flow): transição opcional pós-vitória e doc INTEGRATION
+[33m174505a[m update
+[33m4c8263c[m alteraçoes
+[33m4e6013b[m adicionei cenas
+[33m6889606[m setup initial room and player with movement and basic structure
+[33m9d45b89[m o carnes atualizoú o md porque tava mal
+[33m9757692[m sei la
+[33mb3231cc[m primeiro commit do carnes para dar setup nesta merda
+[33mb8a61ac[m Initial commit
