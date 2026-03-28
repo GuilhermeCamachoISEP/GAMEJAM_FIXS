@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cadh1uco15m53"]
+
+[ext_resource type="Script" uid="uid://bffi2msdhn2et" path="res://scripts/player/player.gd" id="1_player"]
+[ext_resource type="Texture2D" uid="uid://ctpo43y88vmeq" path="res://assets/sprites/saco.jpeg" id="2_sprite"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(200, 200)
+
+[node name="Player" type="CharacterBody2D" unique_id=876724139]
+script = ExtResource("1_player")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=32902179]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_sprite")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=652601690]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1198169990]
+position_smoothing_enabled = true
