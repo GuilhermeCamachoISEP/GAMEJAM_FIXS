@@ -1,0 +1,92 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/mirror_puzzle.gd" id="1_root"]
+[ext_resource type="Script" path="res://scripts/puzzles/mirror_reflect_body.gd" id="2_refl"]
+[ext_resource type="Script" path="res://scripts/puzzles/mirror_piece.gd" id="3_inter"]
+[ext_resource type="Script" path="res://scripts/puzzles/mirror_receiver.gd" id="4_recv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_refl_a"]
+size = Vector2(140, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_use_a"]
+size = Vector2(160, 72)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_refl_b"]
+size = Vector2(120, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_use_b"]
+size = Vector2(140, 70)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_recv"]
+size = Vector2(56, 56)
+
+[node name="MirrorPuzzle" type="Node2D"]
+script = ExtResource("1_root")
+sun_direction = Vector2(0.985, 0.174)
+
+[node name="Beam" type="Line2D" parent="."]
+width = 4.0
+default_color = Color(1, 0.95, 0.55, 0.85)
+
+[node name="Sun" type="Marker2D" parent="."]
+position = Vector2(-520, -120)
+
+[node name="MirrorA" type="Node2D" parent="."]
+position = Vector2(-120, 40)
+rotation = 0.392699
+
+[node name="ReflectBody" type="StaticBody2D" parent="MirrorA"]
+collision_layer = 128
+collision_mask = 0
+script = ExtResource("2_refl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MirrorA/ReflectBody"]
+shape = SubResource("RectangleShape2D_refl_a")
+
+[node name="Visual" type="Polygon2D" parent="MirrorA/ReflectBody"]
+color = Color(0.65, 0.8, 0.95, 0.92)
+polygon = PackedVector2Array(-70, -5, 70, -5, 70, 5, -70, 5)
+
+[node name="Interact" type="Area2D" parent="MirrorA"]
+position = Vector2(0, 0)
+script = ExtResource("3_inter")
+mirror_pivot = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MirrorA/Interact"]
+shape = SubResource("RectangleShape2D_use_a")
+
+[node name="MirrorB" type="Node2D" parent="."]
+position = Vector2(180, -60)
+rotation = -0.261799
+
+[node name="ReflectBody" type="StaticBody2D" parent="MirrorB"]
+collision_layer = 128
+collision_mask = 0
+script = ExtResource("2_refl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MirrorB/ReflectBody"]
+shape = SubResource("RectangleShape2D_refl_b")
+
+[node name="Visual" type="Polygon2D" parent="MirrorB/ReflectBody"]
+color = Color(0.65, 0.8, 0.95, 0.92)
+polygon = PackedVector2Array(-60, -5, 60, -5, 60, 5, -60, 5)
+
+[node name="Interact" type="Area2D" parent="MirrorB"]
+script = ExtResource("3_inter")
+mirror_pivot = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MirrorB/Interact"]
+shape = SubResource("RectangleShape2D_use_b")
+
+[node name="Receiver" type="Area2D" parent="."]
+position = Vector2(420, -100)
+collision_layer = 256
+collision_mask = 0
+script = ExtResource("4_recv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Receiver"]
+shape = SubResource("RectangleShape2D_recv")
+
+[node name="Visual" type="Polygon2D" parent="Receiver"]
+color = Color(0.95, 0.55, 0.2, 1)
+polygon = PackedVector2Array(-28, -28, 28, -28, 28, 28, -28, 28)

@@ -11,8 +11,9 @@ signal puzzle_completed
 @export var day_duration_sec: float = 30.0
 @export var pause_global_level_timer: bool = true
 
+## Relativo ao nó GameManager. Com `Main` → `RoomContainer` → `Room2`, o `Player` está em `../../../Player`.
 @export var spawn_marker_path: NodePath = ^"../Spawn"
-@export var player_path: NodePath = ^"../../Player"
+@export var player_path: NodePath = ^"../../../Player"
 @export var code_puzzle_path: NodePath = ^"../CodePuzzleRoom2"
 
 static var _session_digits: Array[int] = []
@@ -42,6 +43,9 @@ func _ready() -> void:
 		var d := get_session_digits()
 		print("[Room2][debug] Session code: %d%d%d" % [d[0], d[1], d[2]])
 
+	# `Main._ready()` chama `LoopSystem.start_level_session()` → `DayNightSystem.reset_run()`, que
+	# volta a ligar o timer global. Isto corre depois deste _ready, por isso paramos o DayNightSystem
+	# no frame seguinte para a sala não dessincronizar com o puzzle.
 	await get_tree().process_frame
 	DayNightSystem.stop_phase_timer()
 
@@ -84,6 +88,7 @@ func get_current_phase() -> Phase:
 	return _phase
 
 
+## Tempo restante da fase atual (noite ou dia), para o HUD.
 func get_room_phase_seconds_left() -> float:
 	if _puzzle_done:
 		return 0.0
@@ -96,6 +101,7 @@ func get_room_phase_seconds_left() -> float:
 	return _day_timer.time_left
 
 
+## Estimativa até ao fim do ciclo atual se o puzzle não for resolvido.
 func get_room_cycle_seconds_left() -> float:
 	if _puzzle_done:
 		return 0.0
@@ -116,6 +122,12 @@ func notify_code_solved() -> void:
 	if _day_timer:
 		_day_timer.stop()
 	puzzle_completed.emit()
+
+
+func request_room_cycle_reset() -> void:
+	if _puzzle_done:
+		return
+	_perform_soft_reset()
 
 
 func _begin_night_phase() -> void:

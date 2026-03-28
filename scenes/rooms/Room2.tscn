@@ -5,16 +5,138 @@
 [ext_resource type="Script" path="res://scripts/rooms/room2.gd" id="3_room2"]
 [ext_resource type="Script" path="res://scripts/rooms/room2_game_manager.gd" id="4_gm"]
 [ext_resource type="PackedScene" uid="uid://iui64c0ba005" path="res://scenes/puzzles/code_puzzle_room2.tscn" id="5_code"]
+[ext_resource type="PackedScene" uid="uid://torchvisring01" path="res://scenes/visual/torch_vision_ring.tscn" id="6_torch"]
 
 [sub_resource type="Environment" id="Environment_room2"]
 background_mode = 3
-ambient_light_energy = 1.35
-glow_enabled = false
+ambient_light_energy = 1.15
+glow_enabled = true
+glow_intensity = 0.38
+glow_strength = 0.52
+glow_hdr_threshold = 0.72
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_prop_sm"]
+size = Vector2(56, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_prop_md"]
+size = Vector2(72, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_prop_lg"]
+size = Vector2(100, 36)
 
 [node name="Room2" type="Node2D" unique_id=1878882432]
 script = ExtResource("3_room2")
 
 [node name="Room" parent="." unique_id=867815630 instance=ExtResource("1_room")]
+
+[node name="HauntedDecor" type="Node2D" parent="."]
+
+[node name="CoffinTable" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(-280, 80)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/CoffinTable"]
+shape = SubResource("RectangleShape2D_prop_lg")
+
+[node name="Top" type="Polygon2D" parent="HauntedDecor/CoffinTable"]
+color = Color(0.22, 0.16, 0.14, 1)
+polygon = PackedVector2Array(-50, -14, 50, -14, 48, 14, -48, 14)
+
+[node name="LegL" type="Polygon2D" parent="HauntedDecor/CoffinTable"]
+color = Color(0.18, 0.12, 0.1, 1)
+polygon = PackedVector2Array(-42, 14, -34, 14, -34, 28, -42, 28)
+
+[node name="LegR" type="Polygon2D" parent="HauntedDecor/CoffinTable"]
+color = Color(0.18, 0.12, 0.1, 1)
+polygon = PackedVector2Array(34, 14, 42, 14, 42, 28, 34, 28)
+
+[node name="TombstoneA" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(-520, -420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/TombstoneA"]
+shape = SubResource("RectangleShape2D_prop_md")
+
+[node name="Stone" type="Polygon2D" parent="HauntedDecor/TombstoneA"]
+color = Color(0.38, 0.36, 0.4, 1)
+polygon = PackedVector2Array(-22, 48, 22, 48, 26, -40, 14, -50, -14, -50, -26, -40)
+
+[node name="Crack" type="Line2D" parent="HauntedDecor/TombstoneA"]
+width = 1.5
+default_color = Color(0.12, 0.1, 0.14, 0.85)
+points = PackedVector2Array(-6, -35, 4, 20)
+
+[node name="TombstoneB" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(480, -380)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/TombstoneB"]
+shape = SubResource("RectangleShape2D_prop_md")
+
+[node name="Stone" type="Polygon2D" parent="HauntedDecor/TombstoneB"]
+color = Color(0.34, 0.32, 0.36, 1)
+polygon = PackedVector2Array(-24, 50, 24, 50, 20, -42, 0, -52, -20, -42)
+
+[node name="BrokenChair" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(180, 420)
+rotation = 0.35
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/BrokenChair"]
+shape = SubResource("RectangleShape2D_prop_sm")
+
+[node name="Seat" type="Polygon2D" parent="HauntedDecor/BrokenChair"]
+color = Color(0.28, 0.2, 0.14, 1)
+polygon = PackedVector2Array(-26, -8, 22, -8, 24, 10, -28, 10)
+
+[node name="Back" type="Polygon2D" parent="HauntedDecor/BrokenChair"]
+color = Color(0.24, 0.17, 0.12, 1)
+polygon = PackedVector2Array(-26, -8, -18, -8, -14, -36, -22, -38)
+
+[node name="CandelabraStand" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(-120, -520)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/CandelabraStand"]
+position = Vector2(0, 12)
+shape = SubResource("RectangleShape2D_prop_sm")
+
+[node name="Base" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
+color = Color(0.2, 0.16, 0.12, 1)
+polygon = PackedVector2Array(-14, 28, 14, 28, 10, 8, -10, 8)
+
+[node name="Stem" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
+color = Color(0.25, 0.2, 0.15, 1)
+polygon = PackedVector2Array(-4, 8, 4, 8, 3, -24, -3, -24)
+
+[node name="Arms" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
+color = Color(0.22, 0.18, 0.13, 1)
+polygon = PackedVector2Array(-18, -18, 18, -18, 16, -26, -16, -26)
+
+[node name="CandleL" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
+position = Vector2(-14, -32)
+color = Color(0.92, 0.78, 0.35, 1)
+polygon = PackedVector2Array(-3, 0, 3, 0, 2, 14, -2, 14)
+
+[node name="CandleR" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
+position = Vector2(14, -32)
+color = Color(0.92, 0.78, 0.35, 1)
+polygon = PackedVector2Array(-3, 0, 3, 0, 2, 14, -2, 14)
+
+[node name="Drapes" type="Line2D" parent="HauntedDecor"]
+z_index = 1
+position = Vector2(320, -600)
+width = 6.0
+default_color = Color(0.15, 0.12, 0.18, 0.75)
+points = PackedVector2Array(0, 0, 24, 180, -8, 200, 32, 400)
+
+[node name="DustRug" type="Polygon2D" parent="HauntedDecor"]
+z_index = -1
+position = Vector2(40, -40)
+color = Color(0.12, 0.09, 0.11, 0.55)
+polygon = PackedVector2Array(-320, -200, 280, -240, 360, 120, -280, 260)
+
+[node name="WebNW" type="Line2D" parent="HauntedDecor"]
+z_index = 2
+position = Vector2(-680, -680)
+width = 1.2
+default_color = Color(0.55, 0.55, 0.62, 0.35)
+points = PackedVector2Array(0, 0, 80, 40, 120, 120, 40, 100, 20, 180)
 
 [node name="Spawn" type="Marker2D" parent="." unique_id=1480267787]
 position = Vector2(0, 320)
@@ -23,6 +145,8 @@ position = Vector2(0, 320)
 script = ExtResource("4_gm")
 
 [node name="CodePuzzleRoom2" parent="." unique_id=2024524658 instance=ExtResource("5_code")]
+
+[node name="TorchVisionRing" parent="." instance=ExtResource("6_torch")]
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1080078056]
 script = ExtResource("2_luz")

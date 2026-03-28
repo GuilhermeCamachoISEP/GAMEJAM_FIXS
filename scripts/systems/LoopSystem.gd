@@ -54,6 +54,7 @@ func _start_level_timer() -> void:
 	_level_timer.start()
 
 
+## Permite pausar o relógio global do nível (ex.: sala com ciclo próprio tipo Room2).
 func set_level_timer_paused(paused: bool) -> void:
 	if _level_timer:
 		_level_timer.paused = paused

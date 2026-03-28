@@ -1,5 +1,5 @@
 extends Node2D
-## Room 2 — split-code cooperative puzzle. Checklist task id (add to ChecklistSystem when this level is active): `r2_code_entered`
+## Room 2 — puzzle cooperativo de código. Checklist: `r2_code_entered`.
 
 
 func _ready() -> void:

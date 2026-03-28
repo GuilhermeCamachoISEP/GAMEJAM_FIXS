@@ -1,17 +1,17 @@
 extends Node
 class_name ChecklistData
 
-## Referência para presets no editor (opcional); o que vale para a saída é `begin_room_requirements`.
+## Presets só para referência no editor; em jogo usa-se `begin_room_requirements` (chamado em `main.gd`).
 @export var level_1_tasks: PackedStringArray = PackedStringArray(["view_symbols", "open_safe"])
 
-## Tarefas Room4 - Sala dos Sons
+## Tarefas Room4 — usadas por `room4_test.gd` com `begin_room_requirements(room4_tasks)`.
 @export var room4_tasks: PackedStringArray = PackedStringArray(["r4_recorded_sequence", "r4_solved_bells"])
 
-## Singleton em Autoload chama-se `ChecklistSystem`.
+## O singleton em Autoload chama-se `ChecklistSystem`.
 
 signal checklist_changed
 
-var _completed: Dictionary = {} # task_id -> true
+var _completed: Dictionary = {}
 var _active_tasks: PackedStringArray = []
 
 
@@ -19,7 +19,7 @@ func get_active_tasks() -> PackedStringArray:
 	return _active_tasks.duplicate()
 
 
-## Define as tarefas desta sala e repõe o progresso (chamar ao instanciar cada room).
+## Define as tarefas da sala actual e repõe o progresso.
 func begin_room_requirements(task_ids: PackedStringArray) -> void:
 	_active_tasks = task_ids.duplicate()
 	_completed.clear()
@@ -63,7 +63,7 @@ static func task_label(task_id: String) -> String:
 		"open_safe":
 			return "Abrir o cofre"
 		"r2_code_entered":
-			return "Introduzir o código na Room 2"
+			return "Introduzir o código de 3 dígitos (sala 2)"
 		"r4_recorded_sequence":
 			return "Gravar sequência na máquina (Room4)"
 		"r4_solved_bells":
