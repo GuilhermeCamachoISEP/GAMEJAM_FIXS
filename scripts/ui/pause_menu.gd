@@ -28,10 +28,6 @@ func _ready() -> void:
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 	fullscreen_check.toggled.connect(_on_fullscreen_toggled)
 
-	# Connect to Game pause signal
-	if is_instance_valid(Game):
-		Game.game_pause_changed.connect(_on_pause_changed)
-
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause_game"):
 		toggle_pause()
@@ -39,15 +35,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func toggle_pause() -> void:
 	if is_instance_valid(Game):
-		Game.toggle_game_paused()
+		_is_paused = Game.toggle_game_paused()
 	else:
 		# Fallback if Game autoload is not available
 		_is_paused = not _is_paused
 		get_tree().paused = _is_paused
-		_update_visibility()
-
-func _on_pause_changed(is_paused: bool) -> void:
-	_is_paused = is_paused
 	_update_visibility()
 
 func _update_visibility() -> void:
