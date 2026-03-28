@@ -68,6 +68,14 @@ script = ExtResource("3_shadow")
 z_index = 0
 script = ExtResource("2_visual")
 
+[node name="VampireSprite" type="Sprite2D" parent="Visual"]
+position = Vector2(0, 0)
+centered = true
+
+[node name="HumanSprite" type="Sprite2D" parent="Visual"]
+position = Vector2(0, 0)
+centered = true
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 4)
 shape = SubResource("RectangleShape2D_body")

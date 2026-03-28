@@ -176,6 +176,25 @@ func _on_phase_changed(is_night: bool) -> void:
 		_feel_squash(Vector2(1.04, 0.96), 0.2)
 
 
+func _get_move_axis() -> Vector2:
+	## Returns movement vector supporting both arrows and WASD
+	var dir := Vector2.ZERO
+
+	# Horizontal: A/D and arrows
+	if Input.is_action_pressed("ui_left") or Input.is_key_pressed(KEY_A):
+		dir.x -= 1.0
+	if Input.is_action_pressed("ui_right") or Input.is_key_pressed(KEY_D):
+		dir.x += 1.0
+
+	# Vertical: W/S and arrows
+	if Input.is_action_pressed("ui_up") or Input.is_key_pressed(KEY_W):
+		dir.y -= 1.0
+	if Input.is_action_pressed("ui_down") or Input.is_key_pressed(KEY_S):
+		dir.y += 1.0
+
+	return dir
+
+
 func get_facing_direction() -> Vector2:
 	var d := velocity
 	if _is_dashing and top_down:
@@ -224,15 +243,15 @@ func _physics_process(delta: float) -> void:
 
 
 func _begin_dash() -> void:
+	var move_input := _get_move_axis()
 	if top_down:
-		var d := Vector2(Input.get_axis("ui_left", "ui_right"), Input.get_axis("ui_up", "ui_down"))
-		if d.length_squared() < 0.01:
+		if move_input.length_squared() < 0.01:
 			_dash_velocity = Vector2.RIGHT * dash_speed
 		else:
-			_dash_velocity = d.normalized() * dash_speed
+			_dash_velocity = move_input.normalized() * dash_speed
 			_last_move_dir = _dash_velocity.normalized()
 	else:
-		var dx := Input.get_axis("ui_left", "ui_right")
+		var dx := move_input.x
 		if absf(dx) < 0.01:
 			dx = 1.0
 		_dash_velocity = Vector2(signf(dx) * dash_speed, 0.0)
@@ -259,10 +278,7 @@ func _on_dash_duration_finished() -> void:
 
 
 func _top_down_move() -> void:
-	var direction := Vector2(
-		Input.get_axis("ui_left", "ui_right"),
-		Input.get_axis("ui_up", "ui_down")
-	)
+	var direction := _get_move_axis()
 	if direction != Vector2.ZERO:
 		direction = direction.normalized()
 		_last_move_dir = direction
@@ -283,8 +299,8 @@ func _side_view_move(delta: float) -> void:
 		velocity += get_gravity() * delta
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = jump_velocity
-	var dir_x := Input.get_axis("ui_left", "ui_right")
-	velocity.x = dir_x * speed
+	var move_input := _get_move_axis()
+	velocity.x = move_input.x * speed
 	move_and_slide()
 	if absf(velocity.x) > 6.0:
 		_last_move_dir = Vector2(signf(velocity.x), 0)
@@ -325,7 +341,7 @@ func _process(delta: float) -> void:
 
 func interact() -> void:
 	var space_state := get_world_2d().direct_space_state
-	var face := Vector2(Input.get_axis("ui_left", "ui_right"), Input.get_axis("ui_up", "ui_down"))
+	var face := _get_move_axis()
 	var dirs: Array[Vector2] = []
 	if face.length_squared() > 0.01:
 		dirs.append(face.normalized())
