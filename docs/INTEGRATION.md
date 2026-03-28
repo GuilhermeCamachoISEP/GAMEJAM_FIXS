@@ -15,7 +15,7 @@ O ficheiro **este repositório trata como ponto de contacto** para o fluxo globa
 ## Fluxo atual (Godot 4)
 
 1. **Arranque**  
-   `run/main_scene` = `res://scenes/bootstrap.tscn` → após `App.application_ready`, carrega `Game.first_play_scene` (por defeito `res://scenes/main.tscn`). Detalhes: [CORE_AND_BOOTSTRAP.md](CORE_AND_BOOTSTRAP.md).
+   `run/main_scene` = `res://scenes/bootstrap.tscn` → após `App.application_ready`, carrega `Game.first_play_scene` (por defeito `res://scenes/cutscenes/intro_vampire_bite.tscn`, depois `main.tscn`). Detalhes: [CORE_AND_BOOTSTRAP.md](CORE_AND_BOOTSTRAP.md).
 
 2. **Início de nível**  
    Em `_ready()` de `main.gd`, chama-se `LoopSystem.start_level_session()` e `Game.notify_level_loaded()`, que:
@@ -34,7 +34,7 @@ O ficheiro **este repositório trata como ponto de contacto** para o fluxo globa
 
 1. Manter **`run/main_scene`** = `res://scenes/bootstrap.tscn` (entrada única). Criar `res://scenes/menu.tscn` com botão “Jogar” que chama `App.go_to_scene("res://scenes/main.tscn")` (ou path acordado).
 
-2. Definir **`Game.first_play_scene`** = `res://scenes/menu.tscn` no autoload **Game** (ou valor por defeito em `scripts/core/game.gd`), para o bootstrap mostrar primeiro o menu.
+2. Definir **`Game.first_play_scene`** = `res://scenes/menu.tscn` no autoload **Game** (ou valor por defeito em `scripts/core/game.gd`), para o bootstrap mostrar primeiro o menu. O botão “Jogar” pode abrir a cutscene (`res://scenes/cutscenes/intro_vampire_bite.tscn`) ou ir direto a `main.tscn` se quiseres saltar a narrativa.
 
 3. **Coordenação com quem mantém `project.godot`:**  
    - Evitar mudar `run/main_scene` sem aviso; o fluxo canónico é bootstrap → `first_play_scene`.  

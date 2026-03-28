@@ -19,7 +19,7 @@ Quem está **em baixo** corre `_ready()` **depois** dos de cima. `Game` vem por 
 
 1. **`run/main_scene`** = `res://scenes/bootstrap.tscn`.
 2. Autoloads inicializam; `App` agenda o fim do boot; cena atual = **Bootstrap**.
-3. `bootstrap.gd`: `await App.application_ready` → `Game.notify_bootstrap_handoff()` → `App.go_to_scene(Game.first_play_scene)` (por defeito `main.tscn`).
+3. `bootstrap.gd`: `await App.application_ready` → `Game.notify_bootstrap_handoff()` → `App.go_to_scene(Game.first_play_scene)` (por defeito **`intro_vampire_bite.tscn`**, que no fim abre **`main.tscn`**).
 4. **`main.gd`**: `LoopSystem.start_level_session()` + `Game.notify_level_loaded()` → fase **`IN_LEVEL`**.
 5. **Falha de tempo**: `LoopSystem` emite `level_failed` → `Game` passa a **`LEVEL_FAILED_PENDING_RELOAD`** → reload da cena → `main` corre outra vez → **`IN_LEVEL`**.
 6. **Vitória**: `main` chama `Game.go_to_post_victory(post_victory_scene)` → **`LEVEL_WON`** (sem path) ou **`TRANSITIONING`** + mudança de cena.
