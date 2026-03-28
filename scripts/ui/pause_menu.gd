@@ -92,4 +92,10 @@ func _on_sfx_changed(value: float) -> void:
 	Settings.set_sfx_volume_linear(value)
 
 func _on_fullscreen_toggled(enabled: bool) -> void:
+	print("[PauseMenu] Fullscreen toggled: ", enabled)
 	Settings.set_fullscreen(enabled)
+	# Force apply in case Settings didn't apply it
+	if enabled:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
