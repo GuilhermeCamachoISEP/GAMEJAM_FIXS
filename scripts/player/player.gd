@@ -16,6 +16,7 @@ const _DashGhostScript: Script = preload("res://scripts/player/dash_ghost.gd")
 
 @onready var point_light: PointLight2D = $PointLight2D
 @onready var _visual: Node2D = $Visual
+@onready var _visual_script: Node = $Visual  # Reference to visual script for eye glow sync
 @onready var _camera: Camera2D = $Camera2D
 @onready var _sfx_step: AudioStreamPlayer2D = $SfxStep
 @onready var _sfx_action: AudioStreamPlayer2D = $SfxAction
@@ -305,6 +306,11 @@ func _process(delta: float) -> void:
 	_light_pulse_time += delta * _light_pulse_speed
 	var pulse := sin(_light_pulse_time) * _light_pulse_amount
 	point_light.energy = _light_base_energy + pulse
+
+	# Sync eye glow intensity with light pulse (normalized 0.7-1.0 range)
+	var eye_intensity := 0.7 + (pulse / _light_pulse_amount) * 0.3
+	if _visual_script and _visual_script.has_method("set_light_pulse_intensity"):
+		_visual_script.set_light_pulse_intensity(eye_intensity)
 
 	# Update dash trail ghost spawning
 	if _is_spawning_trail:
