@@ -140,3 +140,5 @@ Mesmo com reset:
 ## Integração técnica (equipa)
 
 Fluxo de nível, reset, vitória e transições: ver **[docs/INTEGRATION.md](docs/INTEGRATION.md)** (papéis A/B/D e como encaixar sem conflitos em `project.godot`).
+
+Núcleo `App`, autoloads e bootstrap opcional: **[docs/CORE_AND_BOOTSTRAP.md](docs/CORE_AND_BOOTSTRAP.md)**.

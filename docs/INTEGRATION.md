@@ -62,6 +62,13 @@ O ficheiro **este repositório trata como ponto de contacto** para o fluxo globa
 | `ChecklistSystem` | `scripts/systems/ChecklistSystem.gd` | Tarefas e progresso |
 | `DayNightSystem` | `scripts/systems/DayNightSystem.gd` | Dia/noite e turnos |
 | `InventorySystem` | `scripts/systems/InventorySystem.gd` | Itens (limpos no reset e ao amanhecer) |
+| `App` | `scripts/core/app.gd` | **Core:** arranque (`application_ready`) e mudança de cena; deve ser o **último** autoload |
+
+Arquitetura detalhada (bootstrap, ordem, API): **[docs/CORE_AND_BOOTSTRAP.md](CORE_AND_BOOTSTRAP.md)**.
+
+### Entrada opcional via bootstrap
+
+`scenes/bootstrap.tscn` pode tornar-se `run/main_scene` quando existir menu ou pré‑carregamentos; até lá o projeto pode continuar a arrancar direto em `main.tscn` (comportamento atual).
 
 ## Git: reduzir conflitos
 

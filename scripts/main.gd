@@ -20,7 +20,4 @@ func _on_level_failed() -> void:
 func _on_level_completed() -> void:
 	if post_victory_scene.is_empty():
 		return
-	if not ResourceLoader.exists(post_victory_scene):
-		push_warning("Main: post_victory_scene não encontrado: %s" % post_victory_scene)
-		return
-	get_tree().call_deferred("change_scene_to_file", post_victory_scene)
+	App.go_to_scene_deferred(post_victory_scene)

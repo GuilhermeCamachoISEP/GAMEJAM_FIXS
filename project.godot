@@ -21,6 +21,7 @@ InventorySystem="*uid://dqd1xu0tvcocp"
 ChecklistSystem="*uid://bmi8xk1etd0ia"
 DayNightSystem="*uid://cbrhqraewh0to"
 LoopSystem="*uid://4dmtaurhe8b5"
+App="*uid://dh4m7qappcor8"
 
 [input]
 
@@ -41,8 +42,7 @@ dash={
 
 [rendering]
 
-anti_aliasing/quality/msaa_2d=2
-
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+anti_aliasing/quality/msaa_2d=2
