@@ -21,8 +21,8 @@ InventorySystem="*uid://dqd1xu0tvcocp"
 ChecklistSystem="*uid://bmi8xk1etd0ia"
 DayNightSystem="*uid://cbrhqraewh0to"
 LoopSystem="*uid://4dmtaurhe8b5"
-App="*uid://dh4m7qappcor8"
-Game="*uid://b8vmpgcore001"
+App="*res://scripts/core/app.gd"
+Game="*res://scripts/core/game.gd"
 
 [input]
 

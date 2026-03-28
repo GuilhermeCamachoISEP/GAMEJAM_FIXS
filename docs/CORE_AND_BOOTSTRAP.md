@@ -37,6 +37,10 @@ sequenceDiagram
   Main->>Game: notify_level_loaded
 ```
 
+## UIDs e autoloads
+
+Se o editor mostrar **`Unrecognized UID`** para `Game` ou `App`, o `project.godot` deve referenciar os scripts por **`res://scripts/core/...`** (como no repo atual), não por UID inventado à mão — o Godot só reconhece UIDs que ele próprio regista.
+
 ## Ficheiros
 
 | Ficheiro | Papel |
