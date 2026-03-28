@@ -17,6 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+InventorySystem="*uid://dqd1xu0tvcocp"
+ChecklistSystem="*uid://bmi8xk1etd0ia"
 DayNightSystem="*uid://cbrhqraewh0to"
 LoopSystem="*uid://4dmtaurhe8b5"
 
@@ -38,6 +40,8 @@ dash={
 3d/physics_engine="Jolt Physics"
 
 [rendering]
+
+anti_aliasing/quality/msaa_2d=2
 
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"

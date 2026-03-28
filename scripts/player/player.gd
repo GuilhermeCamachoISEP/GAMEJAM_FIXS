@@ -10,6 +10,10 @@ extends CharacterBody2D
 @export var dash_cooldown: float = 1.0
 
 @onready var point_light: PointLight2D = $PointLight2D
+@onready var _visual: Node2D = $Visual
+
+## Última direção de movimento (normalizada); usada quando a velocidade é ~0.
+var _last_move_dir: Vector2 = Vector2.DOWN
 
 var _is_dashing: bool = false
 ## Direção fixa durante o dash: top-down = velocidade completa; side-view = só X é usado.
@@ -18,10 +22,12 @@ var _dash_velocity: Vector2 = Vector2.ZERO
 var _dash_duration_timer: Timer
 var _dash_cooldown_timer: Timer
 
+
 func _ready() -> void:
 	_setup_point_light_texture()
-	point_light.texture_scale = 4.0
+	point_light.texture_scale = 3.2
 	point_light.position = Vector2.ZERO
+	point_light.shadow_filter = Light2D.SHADOW_FILTER_PCF5
 
 	DayNightSystem.phase_changed.connect(_on_phase_changed)
 	_on_phase_changed(DayNightSystem.is_night)
@@ -54,11 +60,36 @@ func _setup_point_light_texture() -> void:
 
 func _on_phase_changed(is_night: bool) -> void:
 	if is_night:
-		point_light.color = Color(0.8, 0.2, 0.2)
-		point_light.energy = 1.2
+		point_light.color = Color(0.95, 0.35, 0.38)
+		point_light.energy = 1.35
 	else:
-		point_light.color = Color(1.0, 1.0, 0.8)
-		point_light.energy = 0.8
+		point_light.color = Color(1.0, 0.92, 0.72)
+		point_light.energy = 0.95
+	_visual.queue_redraw()
+
+
+func get_facing_direction() -> Vector2:
+	var d := velocity
+	if _is_dashing and top_down:
+		d = _dash_velocity
+	if top_down:
+		if d.length_squared() < 100.0:
+			return _last_move_dir
+		return d.normalized()
+	if absf(velocity.x) > 6.0:
+		return Vector2(signf(velocity.x), 0)
+	if absf(_last_move_dir.x) > 0.01:
+		return Vector2(signf(_last_move_dir.x), 0)
+	return Vector2.RIGHT
+
+
+func _update_facing_rotation() -> void:
+	if top_down:
+		var d := get_facing_direction()
+		_visual.rotation = d.angle() + PI * 0.5
+	else:
+		var dir_x := get_facing_direction().x
+		_visual.rotation = PI if dir_x < 0.0 else 0.0
 
 
 func _physics_process(delta: float) -> void:
@@ -72,12 +103,15 @@ func _physics_process(delta: float) -> void:
 			velocity.x = _dash_velocity.x
 			velocity += get_gravity() * delta
 		move_and_slide()
+		_update_facing_rotation()
 		return
 
 	if top_down:
 		_top_down_move()
 	else:
 		_side_view_move(delta)
+
+	_update_facing_rotation()
 
 
 func _begin_dash() -> void:
@@ -87,6 +121,7 @@ func _begin_dash() -> void:
 			_dash_velocity = Vector2.RIGHT * dash_speed
 		else:
 			_dash_velocity = d.normalized() * dash_speed
+			_last_move_dir = _dash_velocity.normalized()
 	else:
 		var dx := Input.get_axis("ui_left", "ui_right")
 		if absf(dx) < 0.01:
@@ -111,6 +146,7 @@ func _top_down_move() -> void:
 	)
 	if direction != Vector2.ZERO:
 		direction = direction.normalized()
+		_last_move_dir = direction
 	velocity = direction * speed
 	move_and_slide()
 
@@ -123,6 +159,8 @@ func _side_view_move(delta: float) -> void:
 	var dir_x := Input.get_axis("ui_left", "ui_right")
 	velocity.x = dir_x * speed
 	move_and_slide()
+	if absf(velocity.x) > 6.0:
+		_last_move_dir = Vector2(signf(velocity.x), 0)
 
 
 func _process(_delta: float) -> void:

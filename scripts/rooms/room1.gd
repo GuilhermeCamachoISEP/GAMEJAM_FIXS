@@ -3,7 +3,7 @@ extends Node2D
 @onready var _vamp_zone_visual: Polygon2D = $ZonaVampiro/Visual
 
 ## Cor HDR para Glow no `Polygon2D` da zona (valores > 1 quando o ambiente tem Glow).
-const _VAMP_GLOW_BASE := Color(3.0, 0.5, 3.0)
+const _VAMP_GLOW_BASE := Color(2.4, 0.45, 2.6)
 
 const _INTERACTIVE_NODES: PackedStringArray = ["Quadro", "Cofre", "Porta", "ZonaVampiro"]
 
