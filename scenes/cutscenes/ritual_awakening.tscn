@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://cr1tualawake01"]
+[gd_scene format=3 uid="uid://0upbc2dt35c7"]
 
 [ext_resource type="Script" path="res://scripts/cutscenes/ritual_awakening.gd" id="1_ritual"]
 

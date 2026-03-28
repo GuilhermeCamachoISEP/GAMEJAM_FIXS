@@ -1,5 +1,6 @@
 extends Node2D
-## Cutscene I — mordida do vampiro. TTS em português (`DisplayServer.tts_*`). Segue para **ritual_awakening**; saltar vai direto ao nível.
+## Cutscene I — mordida do vampiro. TTS em português (DisplayServer.tts_*).
+## Segue para ritual_awakening; saltar vai direto ao nível.
 
 const NEXT_SCENE: String = "res://scenes/cutscenes/ritual_awakening.tscn"
 const SKIP_GOES_TO: String = "res://scenes/main.tscn"
@@ -33,11 +34,13 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not _running:
+	if not _running or event.is_echo():
 		return
-	if event.is_echo():
-		return
-	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("ui_accept") or event is InputEventMouseButton and event.pressed:
+	var is_mouse_click: bool = event is InputEventMouseButton \
+		and (event as InputEventMouseButton).pressed
+	if event.is_action_pressed("ui_cancel") \
+			or event.is_action_pressed("ui_accept") \
+			or is_mouse_click:
 		_skip_to_game()
 
 
@@ -47,7 +50,8 @@ func _running_yes() -> bool:
 
 func _play() -> void:
 	var open := create_tween()
-	open.tween_property(_fade, "modulate:a", 0.0, 1.05).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	open.tween_property(_fade, "modulate:a", 0.0, 1.05) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	await open.finished
 	if not _running:
 		return
@@ -61,12 +65,10 @@ func _play() -> void:
 
 func _beats() -> void:
 	await _subtitle_hold("[i]Capítulo I — A Mordida[/i]", 2.35)
-	if not _running:
-		return
+	if not _running: return
 
 	await _subtitle_hold("Estás na sala. A noite acaba de cair…", 2.65)
-	if not _running:
-		return
+	if not _running: return
 
 	_set_subtitle("Ouves passos. Uma sombra aproxima-se.")
 	CutsceneVoice.speak("Ouves passos. Uma sombra aproxima-se.")
@@ -74,45 +76,44 @@ func _beats() -> void:
 	approach.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUINT)
 	approach.tween_property(_vampire, "position:x", -95.0, 3.2)
 	await approach.finished
-	if not _running:
-		return
-	await CutsceneVoice.wait_line_finish(get_tree(), Callable(self, "_running_yes"), 0.35)
+	if not _running: return
+	await CutsceneVoice.wait_line_finish(_running_yes, 0.35)
+	if not _running: return
 
 	await _subtitle_hold("Ele inclina-se para ti…", 1.25)
-	if not _running:
-		return
+	if not _running: return
 
 	var lunge := create_tween()
 	lunge.set_parallel(true)
-	lunge.tween_property(_vampire, "position:x", -35.0, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	lunge.tween_property(_vampire, "position:x", -35.0, 0.22) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	lunge.tween_property(_vampire, "rotation", 0.08, 0.18)
 	await lunge.finished
-	if not _running:
-		return
+	if not _running: return
 
 	await _subtitle_hold("— A mordida.", 0.75)
-	if not _running:
-		return
+	if not _running: return
 
 	var bite := create_tween()
 	bite.set_parallel(true)
-	bite.tween_property(_human, "scale", Vector2(-1.12, 0.88), 0.1).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	bite.tween_property(_human, "scale", Vector2(-1.12, 0.88), 0.1) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	bite.tween_property(_flash, "modulate:a", 0.62, 0.05)
 	bite.tween_property(_camera, "offset", Vector2(6.0, -3.0), 0.06)
 	await bite.finished
-	if not _running:
-		return
+	if not _running: return
 
 	var recover := create_tween()
 	recover.set_parallel(true)
-	recover.tween_property(_human, "scale", HUMAN_FACE_FLIP, 0.45).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	recover.tween_property(_human, "scale", HUMAN_FACE_FLIP, 0.45) \
+		.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	recover.tween_property(_flash, "modulate:a", 0.0, 0.55)
-	recover.tween_property(_vampire, "position:x", -120.0, 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	recover.tween_property(_vampire, "position:x", -120.0, 0.5) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	recover.tween_property(_vampire, "rotation", 0.0, 0.45)
 	recover.tween_property(_camera, "offset", Vector2.ZERO, 0.5)
 	await recover.finished
-	if not _running:
-		return
+	if not _running: return
 
 	await _subtitle_hold(
 		"A mordida queima nas veias. Já não és só humano — és vampiro.\n" +
@@ -125,7 +126,8 @@ func _outro() -> void:
 	_running = false
 	CutsceneVoice.stop()
 	var tw := create_tween()
-	tw.tween_property(_fade, "modulate:a", 1.0, 0.95).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tw.tween_property(_fade, "modulate:a", 1.0, 0.95) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	await tw.finished
 	CutsceneNav.change_scene(get_tree(), NEXT_SCENE)
 
@@ -133,7 +135,7 @@ func _outro() -> void:
 func _subtitle_hold(text: String, seconds: float) -> void:
 	_set_subtitle(text)
 	CutsceneVoice.speak(text)
-	await CutsceneVoice.wait_line_finish(get_tree(), Callable(self, "_running_yes"), maxf(seconds, 0.55))
+	await CutsceneVoice.wait_line_finish(_running_yes, maxf(seconds, 0.55))
 
 
 func _set_subtitle(bb_text: String) -> void:

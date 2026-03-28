@@ -26,12 +26,18 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not _running:
+	if not _running or event.is_echo():
 		return
-	if event.is_echo():
-		return
-	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("ui_accept") or event is InputEventMouseButton and event.pressed:
+	var is_mouse_click: bool = event is InputEventMouseButton \
+		and (event as InputEventMouseButton).pressed
+	if event.is_action_pressed("ui_cancel") \
+			or event.is_action_pressed("ui_accept") \
+			or is_mouse_click:
 		_skip_to_game()
+
+
+func _running_yes() -> bool:
+	return _running
 
 
 func _play() -> void:
@@ -47,26 +53,22 @@ func _play() -> void:
 	pulse_tween.tween_property(_pulse, "modulate:a", 0.06, 1.4).set_trans(Tween.TRANS_SINE)
 
 	await _line_voice("[i]Capítulo II — O pacto da noite[/i]", 2.5)
-	if not _running:
-		return
+	if not _running: return
 
 	await _line_voice(
 		"Ouves o relógio da mansão. O tempo já não te pertence como antes.",
 		4.0
 	)
-	if not _running:
-		return
+	if not _running: return
 
 	await _line_voice(
 		"Cada noite serás caçador. Cada dia… outra pessoa em ti acorda.",
 		4.2
 	)
-	if not _running:
-		return
+	if not _running: return
 
 	await _line_voice("Respira fundo. A mansão espera.", 3.0)
-	if not _running:
-		return
+	if not _running: return
 
 	pulse_tween.kill()
 	await _outro()
@@ -75,11 +77,7 @@ func _play() -> void:
 func _line_voice(bb: String, min_sec: float) -> void:
 	_set_subtitle(bb)
 	CutsceneVoice.speak(bb)
-	await CutsceneVoice.wait_line_finish(get_tree(), Callable(self, "_running_yes"), min_sec)
-
-
-func _running_yes() -> bool:
-	return _running
+	await CutsceneVoice.wait_line_finish(_running_yes, min_sec)
 
 
 func _outro() -> void:
