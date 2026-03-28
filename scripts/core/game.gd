@@ -16,8 +16,8 @@ enum RunPhase {
 	TRANSITIONING,
 }
 
-## Primeira cena após o bootstrap (nível raiz ou menu quando A existir). Editável no script ou no inspector do nó **Game** nos Autoloads (Godot 4.x).
-@export_file("*.tscn") var first_play_scene: String = "res://scenes/cutscenes/intro_vampire_bite.tscn"
+## Primeira cena após o bootstrap (menu principal).
+@export_file("*.tscn") var first_play_scene: String = "res://scenes/ui/main_menu.tscn"
 
 ## Ligar para ver mudanças de fase na consola (**Output** ao correr com F5).
 @export var debug_log_phases: bool = false
