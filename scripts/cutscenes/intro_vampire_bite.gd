@@ -1,5 +1,5 @@
 extends Node2D
-## Cutscene I — mordida do vampiro. TTS em português (DisplayServer.tts_*).
+## Cutscene I — mordida do vampiro. TTS nativo do Godot (DisplayServer).
 ## Segue para ritual_awakening; saltar vai direto ao nível.
 
 const NEXT_SCENE: String = "res://scenes/cutscenes/ritual_awakening.tscn"
@@ -18,7 +18,6 @@ const HUMAN_FACE_FLIP := Vector2(-1.0, 1.0)
 var _running: bool = true
 var _skippable_after_sec: float = 0.35
 
-
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if _camera:
@@ -32,7 +31,6 @@ func _ready() -> void:
 	_vampire.scale = Vector2(-1.0, 1.0)
 	call_deferred("_play")
 
-
 func _unhandled_input(event: InputEvent) -> void:
 	if not _running or event.is_echo():
 		return
@@ -43,25 +41,17 @@ func _unhandled_input(event: InputEvent) -> void:
 			or is_mouse_click:
 		_skip_to_game()
 
-
-func _running_yes() -> bool:
-	return _running
-
-
 func _play() -> void:
 	var open := create_tween()
 	open.tween_property(_fade, "modulate:a", 0.0, 1.05) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	await open.finished
-	if not _running:
-		return
+	if not _running: return
 
 	await _beats()
-	if not _running:
-		return
+	if not _running: return
 
 	await _outro()
-
 
 func _beats() -> void:
 	await _subtitle_hold("[i]Capítulo I — A Mordida[/i]", 2.35)
@@ -71,13 +61,14 @@ func _beats() -> void:
 	if not _running: return
 
 	_set_subtitle("Ouves passos. Uma sombra aproxima-se.")
-	CutsceneVoice.speak("Ouves passos. Uma sombra aproxima-se.")
+	_speak_internal("Ouves passos. Uma sombra aproxima-se.")
+	
 	var approach := create_tween()
 	approach.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUINT)
 	approach.tween_property(_vampire, "position:x", -95.0, 3.2)
 	await approach.finished
-	if not _running: return
-	await CutsceneVoice.wait_line_finish(_running_yes, 0.35)
+	
+	await get_tree().create_timer(1.0).timeout
 	if not _running: return
 
 	await _subtitle_hold("Ele inclina-se para ti…", 1.25)
@@ -121,38 +112,58 @@ func _beats() -> void:
 		5.2
 	)
 
-
 func _outro() -> void:
 	_running = false
-	CutsceneVoice.stop()
+	_stop_speech()
 	var tw := create_tween()
 	tw.tween_property(_fade, "modulate:a", 1.0, 0.95) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	await tw.finished
-	CutsceneNav.change_scene(get_tree(), NEXT_SCENE)
-
+	
+	# Fallback caso CutsceneNav não exista
+	if has_node("/root/CutsceneNav"):
+		get_node("/root/CutsceneNav").change_scene(get_tree(), NEXT_SCENE)
+	else:
+		get_tree().change_scene_to_file(NEXT_SCENE)
 
 func _subtitle_hold(text: String, seconds: float) -> void:
 	_set_subtitle(text)
-	CutsceneVoice.speak(text)
-	await CutsceneVoice.wait_line_finish(_running_yes, maxf(seconds, 0.55))
-
+	_speak_internal(text)
+	await get_tree().create_timer(seconds).timeout
 
 func _set_subtitle(bb_text: String) -> void:
 	if _subtitle:
 		_subtitle.text = "[center]%s[/center]" % bb_text
 
-
 func _skip_to_game() -> void:
 	if _skippable_after_sec > 0.0:
 		return
 	_running = false
-	CutsceneVoice.stop()
-	CutsceneNav.change_scene(get_tree(), SKIP_GOES_TO)
-
+	_stop_speech()
+	
+	if has_node("/root/CutsceneNav"):
+		get_node("/root/CutsceneNav").change_scene(get_tree(), SKIP_GOES_TO)
+	else:
+		get_tree().change_scene_to_file(SKIP_GOES_TO)
 
 func _process(delta: float) -> void:
 	if _skippable_after_sec > 0.0:
 		_skippable_after_sec -= delta
 		if _skippable_after_sec <= 0.0 and _skip_hint:
 			_skip_hint.visible = true
+
+# --- SISTEMA DE VOZ INTERNO (TTS) ---
+func _speak_internal(message: String) -> void:
+	# Remove tags BBCode para o TTS não ler [i] ou [center]
+	var plain_text = message.replace("[i]", "").replace("[/i]", "").replace("[center]", "").replace("[/center]", "")
+	DisplayServer.tts_stop()
+	DisplayServer.tts_speak(plain_text, _get_portuguese_voice())
+
+func _stop_speech() -> void:
+	DisplayServer.tts_stop()
+
+func _get_portuguese_voice() -> String:
+	var voices = DisplayServer.tts_get_voices_for_language("pt")
+	if voices.size() > 0:
+		return voices[0]
+	return ""

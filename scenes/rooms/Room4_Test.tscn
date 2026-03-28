@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://room4test001"]
+
+[ext_resource type="PackedScene" uid="uid://room4bells001" path="res://scenes/rooms/Room4.tscn" id="1_room4"]
+[ext_resource type="Script" path="res://scripts/rooms/room4_test.gd" id="2_test"]
+
+[sub_resource type="GDScript" id="GDScript_camera"]
+resource_name = "Room4Camera"
+script/source = "extends Camera2D
+
+func _ready():
+	make_current()
+	position = Vector2(0, 0)
+
+func _process(_delta):
+	## Camera follows mouse slightly for parallax effect
+	var mouse = get_global_mouse_position()
+	position = position.lerp(mouse * 0.05, 0.1)
+"
+
+[node name="Room4Test" type="Node2D"]
+script = ExtResource("2_test")
+
+[node name="Room4" parent="." instance=ExtResource("1_room4")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, 0)
+script = SubResource("GDScript_camera")
+
+[node name="PlayerSpawner" type="Node2D" parent="."]
+position = Vector2(0, 0)
+
+[node name="Instructions" type="Label" parent="."]
+offset_left = -500.0
+offset_top = -550.0
+offset_right = 500.0
+offset_bottom = -450.0
+text = "TESTE - SALA DOS SINOS (Room4)\n\n🦇 NOITE: Vê símbolos na parede esquerda e grava na máquina\n☀️ DIA: Ouve a máquina e repete a sequência nos sinos\n⚠️ TWIST: Os sons da máquina são diferentes dos sinos reais!"
+horizontal_alignment = 1
+vertical_alignment = 1

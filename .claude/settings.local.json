@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/GonçaloDeAlmeidaMate/Desktop/Gamejam/GAMEJAM_FIXS -type f -name *.gd -o -name *.tscn -o -name *.tres)"
+    ]
+  }
+}

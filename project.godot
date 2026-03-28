@@ -17,14 +17,13 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-InventorySystem="*res://scripts/systems/InventorySystem.gd"
-ChecklistSystem="*res://scripts/systems/ChecklistSystem.gd"
-DayNightSystem="*res://scripts/systems/DayNightSystem.gd"
-LoopSystem="*res://scripts/systems/LoopSystem.gd"
+InventorySystem="*uid://dqd1xu0tvcocp"
+ChecklistSystem="*uid://bmi8xk1etd0ia"
+DayNightSystem="*uid://cbrhqraewh0to"
+LoopSystem="*uid://4dmtaurhe8b5"
 App="*res://scripts/core/app.gd"
 Game="*res://scripts/core/game.gd"
 Settings="*res://scripts/core/settings.gd"
-CutsceneVoice="*res://scripts/cutscenes/cutscene_voice.gd"
 
 [display]
 
