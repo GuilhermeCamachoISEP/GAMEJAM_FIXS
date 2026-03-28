@@ -4,9 +4,13 @@ extends Node2D
 @export var post_victory_scene: String = ""
 
 ## Ordem do run: Room1, Room2, … — adiciona mais paths no inspector se criares Room3+.
+## **Só Room2:** deixa aqui um único elemento `res://scenes/rooms/Room2.tscn` ou ativa `start_with_room2_only`.
 @export var room_scene_paths: PackedStringArray = PackedStringArray(
 	["res://scenes/rooms/Room1.tscn", "res://scenes/rooms/Room2.tscn"]
 )
+
+## Se ativo, ignora `room_scene_paths` e carrega apenas a Room2 (testes rápidos).
+@export var start_with_room2_only: bool = false
 
 var _room_index: int = 0
 var _room_instance: Node2D
@@ -36,6 +40,13 @@ func _ready() -> void:
 
 func _build_valid_room_list() -> void:
 	_room_paths.clear()
+	if start_with_room2_only:
+		var only := "res://scenes/rooms/Room2.tscn"
+		if ResourceLoader.exists(only):
+			_room_paths.append(only)
+		else:
+			push_error("Main: não encontrei %s" % only)
+		return
 	for p: String in room_scene_paths:
 		var t: String = p.strip_edges()
 		if t.is_empty():
@@ -47,14 +58,16 @@ func _build_valid_room_list() -> void:
 
 
 func _checklist_tasks_for_room(room_i: int) -> PackedStringArray:
-	match room_i:
-		0:
-			return PackedStringArray(["view_symbols", "open_safe"])
-		1:
-			return PackedStringArray(["r2_code_entered"])
-		_:
-			push_warning("Main: sem checklist definida para sala índice %d — usa lista vazia." % room_i)
-			return PackedStringArray()
+	if room_i < 0 or room_i >= _room_paths.size():
+		push_warning("Main: índice de sala inválido: %d" % room_i)
+		return PackedStringArray()
+	var path_s: String = _room_paths[room_i]
+	if path_s.contains("Room2"):
+		return PackedStringArray(["r2_code_entered"])
+	if path_s.contains("Room1"):
+		return PackedStringArray(["view_symbols", "open_safe"])
+	push_warning("Main: sem checklist definida para: %s" % path_s)
+	return PackedStringArray()
 
 
 func _load_room_at_index(i: int) -> void:

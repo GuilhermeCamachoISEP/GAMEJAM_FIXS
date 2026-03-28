@@ -7,11 +7,12 @@
 
 [node name="Main" type="Node2D" unique_id=276319574]
 script = ExtResource("1_main")
+start_with_room2_only = true
 
 [node name="GameHUD" parent="." unique_id=1734609229 instance=ExtResource("2_hud")]
 
-[node name="PauseMenu" parent="." instance=ExtResource("5_pause")]
+[node name="PauseMenu" parent="." unique_id=1527719471 instance=ExtResource("5_pause")]
 
 [node name="Player" parent="." unique_id=708610383 instance=ExtResource("3_player")]
 
-[node name="RoomContainer" type="Node2D" parent="."]
+[node name="RoomContainer" type="Node2D" parent="." unique_id=2088363543]

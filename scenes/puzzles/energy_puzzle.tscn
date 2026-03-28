@@ -1,0 +1,56 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/energy_puzzle.gd" id="1_energy"]
+[ext_resource type="Script" path="res://scripts/puzzles/energy_hotspot.gd" id="2_hot"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gen"]
+size = Vector2(100, 88)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_panel"]
+size = Vector2(100, 88)
+
+[node name="EnergyPuzzle" type="Node2D"]
+script = ExtResource("1_energy")
+
+[node name="CableA" type="Line2D" parent="."]
+width = 5.0
+default_color = Color(0.28, 0.32, 0.38, 0.55)
+points = PackedVector2Array(0, 0, 110, 0)
+
+[node name="CableB" type="Line2D" parent="."]
+width = 5.0
+default_color = Color(0.25, 0.3, 0.35, 0.45)
+points = PackedVector2Array(110, 0, 220, 0)
+
+[node name="Generator" type="Node2D" parent="."]
+
+[node name="Visual" type="Polygon2D" parent="Generator"]
+color = Color(0.28, 0.32, 0.38, 1)
+polygon = PackedVector2Array(-40, -36, 40, -36, 40, 36, -40, 36)
+
+[node name="Hotspot" type="Area2D" parent="Generator"]
+script = ExtResource("2_hot")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Generator/Hotspot"]
+shape = SubResource("RectangleShape2D_gen")
+
+[node name="EnergyNode" type="Node2D" parent="."]
+position = Vector2(110, 0)
+
+[node name="Visual" type="Polygon2D" parent="EnergyNode"]
+color = Color(0.25, 0.3, 0.35, 1)
+polygon = PackedVector2Array(-22, -22, 22, -22, 22, 22, -22, 22)
+
+[node name="FinalPanel" type="Node2D" parent="."]
+position = Vector2(220, 0)
+
+[node name="Visual" type="Polygon2D" parent="FinalPanel"]
+color = Color(0.3, 0.28, 0.26, 1)
+polygon = PackedVector2Array(-40, -36, 40, -36, 40, 36, -40, 36)
+
+[node name="Hotspot" type="Area2D" parent="FinalPanel"]
+script = ExtResource("2_hot")
+kind = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FinalPanel/Hotspot"]
+shape = SubResource("RectangleShape2D_panel")

@@ -64,6 +64,7 @@ var _last_collision_normal: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
+	add_to_group("player")
 	_setup_point_light_texture()
 	point_light.texture_scale = 6.2
 	point_light.position = Vector2.ZERO
@@ -168,7 +169,7 @@ func _on_phase_changed(is_night: bool) -> void:
 		point_light.color = Color(1.0, 0.56, 0.58)
 		point_light.energy = 2.9
 		_light_base_energy = 2.9
-		_light_pulse_speed = 2.8  # Keep a subtle pulse without reducing readability
+		_light_pulse_speed = 2.8
 		_light_pulse_amount = 0.12
 	else:
 		point_light.color = Color(1.0, 0.99, 0.94)

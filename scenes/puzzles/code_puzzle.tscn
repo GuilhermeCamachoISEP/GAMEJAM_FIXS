@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/code_puzzle.gd" id="1_script"]
+
+[node name="CodePuzzle" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="NightCodeDisplay" type="Label" parent="."]
+offset_left = -140.0
+offset_top = -96.0
+offset_right = 140.0
+offset_bottom = -40.0
+theme_override_colors/font_color = Color(0.92, 0.88, 0.78, 1)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+text = "7 _ 9"
+
+[node name="DayCodeDisplay" type="Label" parent="."]
+visible = false
+offset_left = -140.0
+offset_top = -96.0
+offset_right = 140.0
+offset_bottom = -40.0
+theme_override_colors/font_color = Color(0.15, 0.12, 0.1, 1)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+text = "_ 2 _"
+
+[node name="CodeInput" type="LineEdit" parent="."]
+offset_left = -96.0
+offset_top = -24.0
+offset_right = 96.0
+offset_bottom = 20.0
+alignment = 1
+max_length = 3
+flat = true
+
+[node name="SubmitButton" type="Button" parent="."]
+offset_left = -96.0
+offset_top = 32.0
+offset_right = 96.0
+offset_bottom = 72.0
+text = "Submeter código"
