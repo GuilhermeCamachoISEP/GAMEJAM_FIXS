@@ -4,11 +4,14 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/game_hud.tscn" id="2_hud"]
 [ext_resource type="PackedScene" uid="uid://cadh1uco15m53" path="res://scenes/player/Player.tscn" id="3_player"]
 [ext_resource type="PackedScene" uid="uid://bnhfqkw7x5r4a" path="res://scenes/rooms/Room2.tscn" id="4_jyhfs"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="5_pause"]
 
 [node name="Main" type="Node2D" unique_id=276319574]
 script = ExtResource("1_main")
 
 [node name="GameHUD" parent="." unique_id=1734609229 instance=ExtResource("2_hud")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("5_pause")]
 
 [node name="Player" parent="." unique_id=708610383 instance=ExtResource("3_player")]
 
