@@ -7,14 +7,19 @@
 [ext_resource type="PackedScene" uid="uid://iui64c0ba005" path="res://scenes/puzzles/code_puzzle_room2.tscn" id="5_code"]
 [ext_resource type="PackedScene" uid="uid://torchvisring01" path="res://scenes/visual/torch_vision_ring.tscn" id="6_torch"]
 
+; ── Ambiente escuro vampírico ─────────────────────────────────────────────
 [sub_resource type="Environment" id="Environment_room2"]
 background_mode = 3
-ambient_light_energy = 1.15
+ambient_light_color = Color(0.08, 0.02, 0.10, 1)
+ambient_light_energy = 1.2
 glow_enabled = true
-glow_intensity = 0.38
-glow_strength = 0.52
-glow_hdr_threshold = 0.72
+glow_intensity = 1.1
+glow_strength = 1.2
+glow_hdr_threshold = 0.55
+glow_bloom = 0.18
 
+; ── Formas de colisão ─────────────────────────────────────────────────────
+; Originais
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_prop_sm"]
 size = Vector2(56, 48)
 
@@ -24,31 +29,131 @@ size = Vector2(72, 100)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_prop_lg"]
 size = Vector2(100, 36)
 
+; Novos objetos
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_coffin"]
+size = Vector2(90, 200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bookcase"]
+size = Vector2(80, 160)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_altar"]
+size = Vector2(120, 50)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pillar"]
+size = Vector2(40, 180)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_throne"]
+size = Vector2(80, 120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_barrel"]
+size = Vector2(52, 60)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mirror"]
+size = Vector2(56, 100)
+
+; ── CENA ──────────────────────────────────────────────────────────────────
 [node name="Room2" type="Node2D" unique_id=1878882432]
 script = ExtResource("3_room2")
 
 [node name="Room" parent="." unique_id=867815630 instance=ExtResource("1_room")]
 
+; ══════════════════════════════════════════════════════════════════════════
+; DECORAÇÃO ASSOMBRADA / VAMPÍRICA
+; ══════════════════════════════════════════════════════════════════════════
 [node name="HauntedDecor" type="Node2D" parent="."]
 
-[node name="CoffinTable" type="StaticBody2D" parent="HauntedDecor"]
-position = Vector2(-280, 80)
+; ── Tapete empoeirado (fundo) ─────────────────────────────────────────────
+[node name="DustRug" type="Polygon2D" parent="HauntedDecor"]
+z_index = -1
+position = Vector2(40, -40)
+color = Color(0.10, 0.05, 0.09, 0.65)
+polygon = PackedVector2Array(-320, -200, 280, -240, 360, 120, -280, 260)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/CoffinTable"]
-shape = SubResource("RectangleShape2D_prop_lg")
+; Padrão de círculo no tapete (pentagrama sugerido)
+[node name="RugRing" type="Line2D" parent="HauntedDecor"]
+z_index = -1
+position = Vector2(40, -40)
+width = 2.0
+default_color = Color(0.28, 0.0, 0.04, 0.45)
+points = PackedVector2Array(0, -120, 71, -37, 44, 97, -44, 97, -71, -37, 0, -120)
 
-[node name="Top" type="Polygon2D" parent="HauntedDecor/CoffinTable"]
-color = Color(0.22, 0.16, 0.14, 1)
-polygon = PackedVector2Array(-50, -14, 50, -14, 48, 14, -48, 14)
+; ── Teia de aranha NO (já existia, mantida) ───────────────────────────────
+[node name="WebNW" type="Line2D" parent="HauntedDecor"]
+z_index = 2
+position = Vector2(-680, -680)
+width = 1.2
+default_color = Color(0.55, 0.55, 0.62, 0.35)
+points = PackedVector2Array(0, 0, 80, 40, 120, 120, 40, 100, 20, 180)
 
-[node name="LegL" type="Polygon2D" parent="HauntedDecor/CoffinTable"]
-color = Color(0.18, 0.12, 0.1, 1)
-polygon = PackedVector2Array(-42, 14, -34, 14, -34, 28, -42, 28)
+; ── Teia de aranha NE ─────────────────────────────────────────────────────
+[node name="WebNE" type="Line2D" parent="HauntedDecor"]
+z_index = 2
+position = Vector2(580, -640)
+width = 1.2
+default_color = Color(0.55, 0.55, 0.62, 0.32)
+points = PackedVector2Array(0, 0, -70, 50, -100, 130, -30, 110, -10, 200)
 
-[node name="LegR" type="Polygon2D" parent="HauntedDecor/CoffinTable"]
-color = Color(0.18, 0.12, 0.1, 1)
-polygon = PackedVector2Array(34, 14, 42, 14, 42, 28, 34, 28)
+; Fio diagonal da teia NE
+[node name="WebNE_strand" type="Line2D" parent="HauntedDecor"]
+z_index = 2
+position = Vector2(580, -640)
+width = 0.8
+default_color = Color(0.55, 0.55, 0.62, 0.28)
+points = PackedVector2Array(-40, 30, -90, 140)
 
+; ── Teia de aranha SE ─────────────────────────────────────────────────────
+[node name="WebSE" type="Line2D" parent="HauntedDecor"]
+z_index = 2
+position = Vector2(560, 580)
+width = 1.0
+default_color = Color(0.52, 0.52, 0.60, 0.28)
+points = PackedVector2Array(0, 0, -60, -40, -90, -110, -20, -90)
+
+; ── Cortinas (já existia, melhorada) ──────────────────────────────────────
+[node name="DrapeL" type="Line2D" parent="HauntedDecor"]
+z_index = 1
+position = Vector2(-620, -620)
+width = 8.0
+default_color = Color(0.12, 0.04, 0.10, 0.88)
+points = PackedVector2Array(0, 0, 16, 120, -6, 220, 20, 380, 10, 520)
+
+[node name="DrapeL2" type="Line2D" parent="HauntedDecor"]
+z_index = 1
+position = Vector2(-570, -620)
+width = 5.0
+default_color = Color(0.09, 0.03, 0.08, 0.70)
+points = PackedVector2Array(0, 0, 12, 100, -4, 200, 14, 340)
+
+[node name="DrapeR" type="Line2D" parent="HauntedDecor"]
+z_index = 1
+position = Vector2(560, -620)
+width = 8.0
+default_color = Color(0.12, 0.04, 0.10, 0.88)
+points = PackedVector2Array(0, 0, -16, 120, 6, 220, -20, 380, -10, 520)
+
+[node name="DrapeR2" type="Line2D" parent="HauntedDecor"]
+z_index = 1
+position = Vector2(510, -620)
+width = 5.0
+default_color = Color(0.09, 0.03, 0.08, 0.70)
+points = PackedVector2Array(0, 0, -10, 110, 5, 210, -12, 360)
+
+; Vareta de cortina
+[node name="CurtainRodL" type="Line2D" parent="HauntedDecor"]
+z_index = 1
+position = Vector2(-680, -620)
+width = 4.0
+default_color = Color(0.22, 0.16, 0.10, 1)
+points = PackedVector2Array(0, 0, 180, 0)
+
+[node name="CurtainRodR" type="Line2D" parent="HauntedDecor"]
+z_index = 1
+position = Vector2(420, -620)
+width = 4.0
+default_color = Color(0.22, 0.16, 0.10, 1)
+points = PackedVector2Array(0, 0, 180, 0)
+
+; ── Lápides (originais, mantidas) ─────────────────────────────────────────
 [node name="TombstoneA" type="StaticBody2D" parent="HauntedDecor"]
 position = Vector2(-520, -420)
 
@@ -56,13 +161,23 @@ position = Vector2(-520, -420)
 shape = SubResource("RectangleShape2D_prop_md")
 
 [node name="Stone" type="Polygon2D" parent="HauntedDecor/TombstoneA"]
-color = Color(0.38, 0.36, 0.4, 1)
+color = Color(0.32, 0.30, 0.35, 1)
 polygon = PackedVector2Array(-22, 48, 22, 48, 26, -40, 14, -50, -14, -50, -26, -40)
 
 [node name="Crack" type="Line2D" parent="HauntedDecor/TombstoneA"]
 width = 1.5
-default_color = Color(0.12, 0.1, 0.14, 0.85)
+default_color = Color(0.10, 0.08, 0.12, 0.90)
 points = PackedVector2Array(-6, -35, 4, 20)
+
+[node name="Cross" type="Line2D" parent="HauntedDecor/TombstoneA"]
+width = 2.5
+default_color = Color(0.18, 0.14, 0.22, 0.80)
+points = PackedVector2Array(-10, -28, 10, -28)
+
+[node name="CrossV" type="Line2D" parent="HauntedDecor/TombstoneA"]
+width = 2.5
+default_color = Color(0.18, 0.14, 0.22, 0.80)
+points = PackedVector2Array(0, -38, 0, -14)
 
 [node name="TombstoneB" type="StaticBody2D" parent="HauntedDecor"]
 position = Vector2(480, -380)
@@ -71,24 +186,136 @@ position = Vector2(480, -380)
 shape = SubResource("RectangleShape2D_prop_md")
 
 [node name="Stone" type="Polygon2D" parent="HauntedDecor/TombstoneB"]
-color = Color(0.34, 0.32, 0.36, 1)
+color = Color(0.30, 0.28, 0.34, 1)
 polygon = PackedVector2Array(-24, 50, 24, 50, 20, -42, 0, -52, -20, -42)
 
-[node name="BrokenChair" type="StaticBody2D" parent="HauntedDecor"]
-position = Vector2(180, 420)
-rotation = 0.35
+[node name="Crack" type="Line2D" parent="HauntedDecor/TombstoneB"]
+width = 1.5
+default_color = Color(0.10, 0.08, 0.12, 0.90)
+points = PackedVector2Array(5, -38, -4, 18)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/BrokenChair"]
-shape = SubResource("RectangleShape2D_prop_sm")
+; ── Caixão (principal, deitado — novo) ────────────────────────────────────
+[node name="Coffin" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(260, -180)
 
-[node name="Seat" type="Polygon2D" parent="HauntedDecor/BrokenChair"]
-color = Color(0.28, 0.2, 0.14, 1)
-polygon = PackedVector2Array(-26, -8, 22, -8, 24, 10, -28, 10)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/Coffin"]
+shape = SubResource("RectangleShape2D_coffin")
 
-[node name="Back" type="Polygon2D" parent="HauntedDecor/BrokenChair"]
-color = Color(0.24, 0.17, 0.12, 1)
-polygon = PackedVector2Array(-26, -8, -18, -8, -14, -36, -22, -38)
+; Sombra
+[node name="Shadow" type="Polygon2D" parent="HauntedDecor/Coffin"]
+z_index = -1
+position = Vector2(8, 10)
+color = Color(0.0, 0.0, 0.0, 0.40)
+polygon = PackedVector2Array(-42, -96, 42, -96, 50, 96, -50, 96)
 
+; Corpo do caixão
+[node name="Body" type="Polygon2D" parent="HauntedDecor/Coffin"]
+color = Color(0.16, 0.09, 0.07, 1)
+polygon = PackedVector2Array(-38, -96, 38, -96, 44, -60, 44, 60, 38, 96, -38, 96, -44, 60, -44, -60)
+
+; Tampa do caixão (levemente aberta)
+[node name="Lid" type="Polygon2D" parent="HauntedDecor/Coffin"]
+position = Vector2(-6, -98)
+rotation = 0.18
+color = Color(0.20, 0.12, 0.09, 1)
+polygon = PackedVector2Array(-38, -4, 38, -4, 44, 24, 44, 98, -44, 98, -44, 24)
+
+; Cruz metálica no caixão
+[node name="CoffinCrossH" type="Line2D" parent="HauntedDecor/Coffin"]
+width = 3.0
+default_color = Color(0.42, 0.28, 0.10, 0.90)
+points = PackedVector2Array(-18, 0, 18, 0)
+
+[node name="CoffinCrossV" type="Line2D" parent="HauntedDecor/Coffin"]
+width = 3.0
+default_color = Color(0.42, 0.28, 0.10, 0.90)
+points = PackedVector2Array(0, -24, 0, 24)
+
+; Dobradiça
+[node name="Hinge" type="Polygon2D" parent="HauntedDecor/Coffin"]
+position = Vector2(0, -98)
+color = Color(0.35, 0.25, 0.08, 1)
+polygon = PackedVector2Array(-6, -4, 6, -4, 6, 4, -6, 4)
+
+; ── Mesas: original (CoffinTable) e nova ──────────────────────────────────
+[node name="CoffinTable" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(-280, 80)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/CoffinTable"]
+shape = SubResource("RectangleShape2D_prop_lg")
+
+[node name="Top" type="Polygon2D" parent="HauntedDecor/CoffinTable"]
+color = Color(0.20, 0.13, 0.10, 1)
+polygon = PackedVector2Array(-50, -14, 50, -14, 48, 14, -48, 14)
+
+[node name="LegL" type="Polygon2D" parent="HauntedDecor/CoffinTable"]
+color = Color(0.15, 0.09, 0.07, 1)
+polygon = PackedVector2Array(-42, 14, -34, 14, -34, 28, -42, 28)
+
+[node name="LegR" type="Polygon2D" parent="HauntedDecor/CoffinTable"]
+color = Color(0.15, 0.09, 0.07, 1)
+polygon = PackedVector2Array(34, 14, 42, 14, 42, 28, 34, 28)
+
+; Taça de sangue em cima da mesa
+[node name="BloodChalice" type="Polygon2D" parent="HauntedDecor/CoffinTable"]
+position = Vector2(0, -22)
+color = Color(0.55, 0.04, 0.04, 1)
+polygon = PackedVector2Array(-8, 0, 8, 0, 6, -12, -6, -12)
+
+[node name="ChaliceBase" type="Polygon2D" parent="HauntedDecor/CoffinTable"]
+position = Vector2(0, -22)
+color = Color(0.40, 0.28, 0.08, 1)
+polygon = PackedVector2Array(-10, 0, 10, 0, 8, 4, -8, 4)
+
+; ── Altar (novo) ──────────────────────────────────────────────────────────
+[node name="Altar" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(-60, -560)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/Altar"]
+position = Vector2(0, 10)
+shape = SubResource("RectangleShape2D_altar")
+
+; Pedestal
+[node name="Base" type="Polygon2D" parent="HauntedDecor/Altar"]
+color = Color(0.18, 0.14, 0.16, 1)
+polygon = PackedVector2Array(-60, 36, 60, 36, 56, -8, -56, -8)
+
+; Topo do altar
+[node name="Top" type="Polygon2D" parent="HauntedDecor/Altar"]
+color = Color(0.22, 0.17, 0.20, 1)
+polygon = PackedVector2Array(-62, -8, 62, -8, 60, -20, -60, -20)
+
+; Vela central no altar
+[node name="CenterCandle" type="Polygon2D" parent="HauntedDecor/Altar"]
+position = Vector2(0, -20)
+color = Color(0.85, 0.72, 0.30, 1)
+polygon = PackedVector2Array(-4, 0, 4, 0, 3, -22, -3, -22)
+
+[node name="CenterFlame" type="Polygon2D" parent="HauntedDecor/Altar"]
+position = Vector2(0, -44)
+color = Color(0.95, 0.35, 0.05, 0.92)
+polygon = PackedVector2Array(-5, 8, 5, 8, 3, -4, 0, -10, -3, -4)
+
+; Livro no altar
+[node name="Book" type="Polygon2D" parent="HauntedDecor/Altar"]
+position = Vector2(28, -14)
+color = Color(0.10, 0.05, 0.08, 1)
+polygon = PackedVector2Array(-14, -8, 14, -8, 14, 8, -14, 8)
+
+[node name="BookSpine" type="Line2D" parent="HauntedDecor/Altar"]
+position = Vector2(14, -14)
+width = 2.5
+default_color = Color(0.35, 0.05, 0.05, 1)
+points = PackedVector2Array(0, -8, 0, 8)
+
+; Símbolo de vampiro no altar (V estilizado)
+[node name="VampireSymbol" type="Line2D" parent="HauntedDecor/Altar"]
+position = Vector2(-24, -15)
+width = 1.8
+default_color = Color(0.60, 0.05, 0.05, 0.80)
+points = PackedVector2Array(-8, -6, 0, 4, 8, -6)
+
+; ── Candelabro (original, melhorado) ─────────────────────────────────────
 [node name="CandelabraStand" type="StaticBody2D" parent="HauntedDecor"]
 position = Vector2(-120, -520)
 
@@ -97,47 +324,495 @@ position = Vector2(0, 12)
 shape = SubResource("RectangleShape2D_prop_sm")
 
 [node name="Base" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
-color = Color(0.2, 0.16, 0.12, 1)
+color = Color(0.18, 0.13, 0.10, 1)
 polygon = PackedVector2Array(-14, 28, 14, 28, 10, 8, -10, 8)
 
 [node name="Stem" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
-color = Color(0.25, 0.2, 0.15, 1)
+color = Color(0.22, 0.17, 0.12, 1)
 polygon = PackedVector2Array(-4, 8, 4, 8, 3, -24, -3, -24)
 
 [node name="Arms" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
-color = Color(0.22, 0.18, 0.13, 1)
+color = Color(0.20, 0.16, 0.11, 1)
 polygon = PackedVector2Array(-18, -18, 18, -18, 16, -26, -16, -26)
 
 [node name="CandleL" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
 position = Vector2(-14, -32)
-color = Color(0.92, 0.78, 0.35, 1)
+color = Color(0.88, 0.74, 0.32, 1)
 polygon = PackedVector2Array(-3, 0, 3, 0, 2, 14, -2, 14)
+
+[node name="FlameL" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
+position = Vector2(-14, -38)
+color = Color(0.95, 0.32, 0.04, 0.90)
+polygon = PackedVector2Array(-4, 6, 4, 6, 2, -2, 0, -8, -2, -2)
 
 [node name="CandleR" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
 position = Vector2(14, -32)
-color = Color(0.92, 0.78, 0.35, 1)
+color = Color(0.88, 0.74, 0.32, 1)
 polygon = PackedVector2Array(-3, 0, 3, 0, 2, 14, -2, 14)
 
-[node name="Drapes" type="Line2D" parent="HauntedDecor"]
-z_index = 1
-position = Vector2(320, -600)
-width = 6.0
-default_color = Color(0.15, 0.12, 0.18, 0.75)
-points = PackedVector2Array(0, 0, 24, 180, -8, 200, 32, 400)
+[node name="FlameR" type="Polygon2D" parent="HauntedDecor/CandelabraStand"]
+position = Vector2(14, -38)
+color = Color(0.95, 0.32, 0.04, 0.90)
+polygon = PackedVector2Array(-4, 6, 4, 6, 2, -2, 0, -8, -2, -2)
 
-[node name="DustRug" type="Polygon2D" parent="HauntedDecor"]
-z_index = -1
-position = Vector2(40, -40)
-color = Color(0.12, 0.09, 0.11, 0.55)
-polygon = PackedVector2Array(-320, -200, 280, -240, 360, 120, -280, 260)
+; Cera derramada
+[node name="WaxDripL" type="Line2D" parent="HauntedDecor/CandelabraStand"]
+position = Vector2(-14, -20)
+width = 2.0
+default_color = Color(0.85, 0.80, 0.72, 0.85)
+points = PackedVector2Array(0, 0, 2, 8, -1, 14)
 
-[node name="WebNW" type="Line2D" parent="HauntedDecor"]
-z_index = 2
-position = Vector2(-680, -680)
+[node name="WaxDripR" type="Line2D" parent="HauntedDecor/CandelabraStand"]
+position = Vector2(14, -20)
+width = 2.0
+default_color = Color(0.85, 0.80, 0.72, 0.85)
+points = PackedVector2Array(0, 0, -1, 10, 2, 16)
+
+; ── Cadeira partida (original, mantida) ───────────────────────────────────
+[node name="BrokenChair" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(180, 420)
+rotation = 0.35
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/BrokenChair"]
+shape = SubResource("RectangleShape2D_prop_sm")
+
+[node name="Seat" type="Polygon2D" parent="HauntedDecor/BrokenChair"]
+color = Color(0.24, 0.16, 0.10, 1)
+polygon = PackedVector2Array(-26, -8, 22, -8, 24, 10, -28, 10)
+
+[node name="Back" type="Polygon2D" parent="HauntedDecor/BrokenChair"]
+color = Color(0.20, 0.13, 0.08, 1)
+polygon = PackedVector2Array(-26, -8, -18, -8, -14, -36, -22, -38)
+
+; ── Trono vampírico (novo) ─────────────────────────────────────────────────
+[node name="VampireThrone" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(380, 280)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/VampireThrone"]
+position = Vector2(0, 20)
+shape = SubResource("RectangleShape2D_throne")
+
+; Assento
+[node name="Seat" type="Polygon2D" parent="HauntedDecor/VampireThrone"]
+color = Color(0.22, 0.06, 0.06, 1)
+polygon = PackedVector2Array(-40, -10, 40, -10, 40, 16, -40, 16)
+
+; Encosto alto
+[node name="Back" type="Polygon2D" parent="HauntedDecor/VampireThrone"]
+color = Color(0.18, 0.05, 0.05, 1)
+polygon = PackedVector2Array(-40, -10, -30, -10, -30, -100, 30, -100, 40, -10, 40, -10, -40, -10)
+
+; Ponta do trono (estilo gótico)
+[node name="Spike" type="Polygon2D" parent="HauntedDecor/VampireThrone"]
+color = Color(0.16, 0.04, 0.04, 1)
+polygon = PackedVector2Array(-8, -100, 8, -100, 0, -120)
+
+; Braços do trono
+[node name="ArmL" type="Polygon2D" parent="HauntedDecor/VampireThrone"]
+color = Color(0.20, 0.06, 0.06, 1)
+polygon = PackedVector2Array(-40, -10, -26, -10, -26, 6, -40, 6)
+
+[node name="ArmR" type="Polygon2D" parent="HauntedDecor/VampireThrone"]
+color = Color(0.20, 0.06, 0.06, 1)
+polygon = PackedVector2Array(26, -10, 40, -10, 40, 6, 26, 6)
+
+; Pernas do trono
+[node name="LegL" type="Polygon2D" parent="HauntedDecor/VampireThrone"]
+color = Color(0.16, 0.04, 0.04, 1)
+polygon = PackedVector2Array(-36, 16, -26, 16, -26, 40, -36, 40)
+
+[node name="LegR" type="Polygon2D" parent="HauntedDecor/VampireThrone"]
+color = Color(0.16, 0.04, 0.04, 1)
+polygon = PackedVector2Array(26, 16, 36, 16, 36, 40, 26, 40)
+
+; Almofada do trono
+[node name="Cushion" type="Polygon2D" parent="HauntedDecor/VampireThrone"]
+color = Color(0.36, 0.04, 0.04, 0.85)
+polygon = PackedVector2Array(-36, -8, 36, -8, 36, 12, -36, 12)
+
+; ── Estante de livros (nova) ──────────────────────────────────────────────
+[node name="Bookcase" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(-640, 120)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/Bookcase"]
+shape = SubResource("RectangleShape2D_bookcase")
+
+; Estrutura
+[node name="Frame" type="Polygon2D" parent="HauntedDecor/Bookcase"]
+color = Color(0.17, 0.11, 0.08, 1)
+polygon = PackedVector2Array(-40, -80, 40, -80, 40, 80, -40, 80)
+
+; Prateleiras
+[node name="Shelf1" type="Line2D" parent="HauntedDecor/Bookcase"]
+width = 3.0
+default_color = Color(0.22, 0.15, 0.10, 1)
+points = PackedVector2Array(-38, -30, 38, -30)
+
+[node name="Shelf2" type="Line2D" parent="HauntedDecor/Bookcase"]
+width = 3.0
+default_color = Color(0.22, 0.15, 0.10, 1)
+points = PackedVector2Array(-38, 20, 38, 20)
+
+; Livros na prateleira superior
+[node name="BookA" type="Polygon2D" parent="HauntedDecor/Bookcase"]
+position = Vector2(-28, -55)
+color = Color(0.35, 0.05, 0.05, 1)
+polygon = PackedVector2Array(-7, -14, 7, -14, 7, 14, -7, 14)
+
+[node name="BookB" type="Polygon2D" parent="HauntedDecor/Bookcase"]
+position = Vector2(-12, -57)
+color = Color(0.08, 0.12, 0.08, 1)
+polygon = PackedVector2Array(-6, -12, 6, -12, 6, 12, -6, 12)
+
+[node name="BookC" type="Polygon2D" parent="HauntedDecor/Bookcase"]
+position = Vector2(4, -54)
+color = Color(0.25, 0.20, 0.08, 1)
+polygon = PackedVector2Array(-7, -15, 7, -15, 7, 15, -7, 15)
+
+[node name="BookD" type="Polygon2D" parent="HauntedDecor/Bookcase"]
+position = Vector2(20, -56)
+color = Color(0.08, 0.08, 0.16, 1)
+polygon = PackedVector2Array(-6, -13, 6, -13, 6, 13, -6, 13)
+
+; Livros na prateleira inferior
+[node name="BookE" type="Polygon2D" parent="HauntedDecor/Bookcase"]
+position = Vector2(-26, 0)
+color = Color(0.16, 0.06, 0.06, 1)
+polygon = PackedVector2Array(-8, -18, 8, -18, 8, 18, -8, 18)
+
+[node name="BookF" type="Polygon2D" parent="HauntedDecor/Bookcase"]
+position = Vector2(-8, 2)
+color = Color(0.22, 0.18, 0.06, 1)
+polygon = PackedVector2Array(-6, -16, 6, -16, 6, 16, -6, 16)
+
+[node name="BookG" type="Polygon2D" parent="HauntedDecor/Bookcase"]
+position = Vector2(12, -1)
+color = Color(0.06, 0.10, 0.06, 1)
+polygon = PackedVector2Array(-9, -17, 9, -17, 9, 17, -9, 17)
+
+; Livro inclinado
+[node name="BookSlanted" type="Polygon2D" parent="HauntedDecor/Bookcase"]
+position = Vector2(28, -3)
+rotation = 0.22
+color = Color(0.30, 0.04, 0.04, 1)
+polygon = PackedVector2Array(-5, -15, 5, -15, 5, 15, -5, 15)
+
+; ── Espelho (novo, sem reflexo) ───────────────────────────────────────────
+[node name="VampireMirror" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(640, -200)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/VampireMirror"]
+position = Vector2(0, 0)
+shape = SubResource("RectangleShape2D_mirror")
+
+; Moldura
+[node name="Frame" type="Polygon2D" parent="HauntedDecor/VampireMirror"]
+color = Color(0.28, 0.20, 0.08, 1)
+polygon = PackedVector2Array(-28, -52, 28, -52, 32, 52, -32, 52)
+
+; Espelho vazio (escuro — vampiros não têm reflexo)
+[node name="Glass" type="Polygon2D" parent="HauntedDecor/VampireMirror"]
+color = Color(0.04, 0.02, 0.06, 0.90)
+polygon = PackedVector2Array(-20, -44, 20, -44, 22, 44, -22, 44)
+
+; Partícula de brilho no espelho
+[node name="Gleam" type="Line2D" parent="HauntedDecor/VampireMirror"]
+position = Vector2(-8, -30)
+width = 1.5
+default_color = Color(0.45, 0.35, 0.55, 0.45)
+points = PackedVector2Array(0, 0, 6, 8)
+
+; Topo ornamentado da moldura
+[node name="FrameTop" type="Polygon2D" parent="HauntedDecor/VampireMirror"]
+color = Color(0.32, 0.22, 0.08, 1)
+polygon = PackedVector2Array(-16, -52, 16, -52, 10, -68, 0, -74, -10, -68)
+
+; ── Barril de sangue (novo) ───────────────────────────────────────────────
+[node name="BloodBarrel" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(-380, 380)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/BloodBarrel"]
+shape = SubResource("RectangleShape2D_barrel")
+
+; Corpo do barril
+[node name="Body" type="Polygon2D" parent="HauntedDecor/BloodBarrel"]
+color = Color(0.20, 0.12, 0.08, 1)
+polygon = PackedVector2Array(-24, -30, 24, -30, 28, 30, -28, 30)
+
+; Aros metálicos
+[node name="HoopTop" type="Line2D" parent="HauntedDecor/BloodBarrel"]
+width = 3.5
+default_color = Color(0.28, 0.20, 0.08, 1)
+points = PackedVector2Array(-24, -16, 24, -16)
+
+[node name="HoopBot" type="Line2D" parent="HauntedDecor/BloodBarrel"]
+width = 3.5
+default_color = Color(0.28, 0.20, 0.08, 1)
+points = PackedVector2Array(-26, 14, 26, 14)
+
+; Líquido vermelho a escorrer
+[node name="BloodDrip" type="Line2D" parent="HauntedDecor/BloodBarrel"]
+position = Vector2(18, -30)
+width = 2.5
+default_color = Color(0.55, 0.03, 0.03, 0.90)
+points = PackedVector2Array(0, 0, 2, 12, -1, 22, 1, 32)
+
+; ── Pilares góticos (novos) ───────────────────────────────────────────────
+[node name="PillarL" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(-700, 200)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/PillarL"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Shaft" type="Polygon2D" parent="HauntedDecor/PillarL"]
+color = Color(0.20, 0.18, 0.22, 1)
+polygon = PackedVector2Array(-18, -90, 18, -90, 20, 90, -20, 90)
+
+[node name="CapTop" type="Polygon2D" parent="HauntedDecor/PillarL"]
+color = Color(0.26, 0.23, 0.28, 1)
+polygon = PackedVector2Array(-24, -90, 24, -90, 22, -100, -22, -100)
+
+[node name="CapBot" type="Polygon2D" parent="HauntedDecor/PillarL"]
+color = Color(0.26, 0.23, 0.28, 1)
+polygon = PackedVector2Array(-24, 88, 24, 88, 22, 100, -22, 100)
+
+[node name="CrackV" type="Line2D" parent="HauntedDecor/PillarL"]
 width = 1.2
-default_color = Color(0.55, 0.55, 0.62, 0.35)
-points = PackedVector2Array(0, 0, 80, 40, 120, 120, 40, 100, 20, 180)
+default_color = Color(0.10, 0.08, 0.12, 0.70)
+points = PackedVector2Array(5, -60, -2, 20, 4, 60)
 
+[node name="PillarR" type="StaticBody2D" parent="HauntedDecor"]
+position = Vector2(700, 200)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HauntedDecor/PillarR"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Shaft" type="Polygon2D" parent="HauntedDecor/PillarR"]
+color = Color(0.20, 0.18, 0.22, 1)
+polygon = PackedVector2Array(-18, -90, 18, -90, 20, 90, -20, 90)
+
+[node name="CapTop" type="Polygon2D" parent="HauntedDecor/PillarR"]
+color = Color(0.26, 0.23, 0.28, 1)
+polygon = PackedVector2Array(-24, -90, 24, -90, 22, -100, -22, -100)
+
+[node name="CapBot" type="Polygon2D" parent="HauntedDecor/PillarR"]
+color = Color(0.26, 0.23, 0.28, 1)
+polygon = PackedVector2Array(-24, 88, 24, 88, 22, 100, -22, 100)
+
+; ── Pentagrama no chão ────────────────────────────────────────────────────
+[node name="Pentagram" type="Node2D" parent="HauntedDecor"]
+position = Vector2(200, 200)
+
+[node name="Line1" type="Line2D" parent="HauntedDecor/Pentagram"]
+width = 3.0
+default_color = Color(0.45, 0.05, 0.05, 0.35)
+points = PackedVector2Array(0, -60, 57, 20, -57, 20, 0, -60)
+
+[node name="Line2" type="Line2D" parent="HauntedDecor/Pentagram"]
+width = 3.0
+default_color = Color(0.45, 0.05, 0.05, 0.35)
+points = PackedVector2Array(-55, -15, 55, -15, 0, 55, -55, -15)
+
+[node name="Circle" type="Line2D" parent="HauntedDecor/Pentagram"]
+width = 2.5
+default_color = Color(0.40, 0.04, 0.04, 0.28)
+points = PackedVector2Array(0, -70, 50, -50, 66, 0, 50, 50, 0, 70, -50, 50, -66, 0, -50, -50, 0, -70)
+
+; ── Poças de sangue ──────────────────────────────────────────────────────
+[node name="BloodPoolA" type="Polygon2D" parent="HauntedDecor"]
+z_index = 0
+position = Vector2(-300, -200)
+color = Color(0.50, 0.02, 0.02, 0.55)
+polygon = PackedVector2Array(-40, 10, -25, -15, 0, -20, 30, -10, 45, 15, 30, 35, 0, 40, -30, 30, -45, 20)
+
+[node name="BloodPoolB" type="Polygon2D" parent="HauntedDecor"]
+z_index = 0
+position = Vector2(420, 120)
+color = Color(0.48, 0.02, 0.02, 0.50)
+polygon = PackedVector2Array(-35, 0, -15, -25, 20, -20, 40, 5, 25, 30, -10, 25, -35, 10)
+
+[node name="BloodTrail" type="Line2D" parent="HauntedDecor"]
+z_index = 0
+position = Vector2(150, 100)
+width = 4.0
+default_color = Color(0.52, 0.03, 0.03, 0.45)
+points = PackedVector2Array(0, 0, 30, -20, 60, -15, 90, -35, 120, -25)
+
+; ── Velas adicionais ────────────────────────────────────────────────────
+[node name="FloorCandleA" type="Polygon2D" parent="HauntedDecor"]
+position = Vector2(-450, 180)
+color = Color(0.75, 0.60, 0.25, 1)
+polygon = PackedVector2Array(-6, 0, 6, 0, 5, 18, -5, 18)
+
+[node name="FloorFlameA" type="Polygon2D" parent="HauntedDecor"]
+position = Vector2(-450, 172)
+color = Color(0.95, 0.35, 0.05, 0.90)
+polygon = PackedVector2Array(-5, 8, 5, 8, 3, -4, 0, -10, -3, -4)
+
+[node name="FloorCandleB" type="Polygon2D" parent="HauntedDecor"]
+position = Vector2(520, -80)
+color = Color(0.75, 0.60, 0.25, 1)
+polygon = PackedVector2Array(-6, 0, 6, 0, 5, 18, -5, 18)
+
+[node name="FloorFlameB" type="Polygon2D" parent="HauntedDecor"]
+position = Vector2(520, -88)
+color = Color(0.95, 0.35, 0.05, 0.90)
+polygon = PackedVector2Array(-5, 8, 5, 8, 3, -4, 0, -10, -3, -4)
+
+[node name="FloorCandleC" type="Polygon2D" parent="HauntedDecor"]
+position = Vector2(-200, 400)
+color = Color(0.75, 0.60, 0.25, 1)
+polygon = PackedVector2Array(-5, 0, 5, 0, 4, 15, -4, 15)
+
+[node name="FloorFlameC" type="Polygon2D" parent="HauntedDecor"]
+position = Vector2(-200, 394)
+color = Color(0.90, 0.30, 0.04, 0.88)
+polygon = PackedVector2Array(-4, 6, 4, 6, 2, -3, 0, -8, -2, -3)
+
+; ── Cristais de sangue ───────────────────────────────────────────────────
+[node name="BloodCrystalA" type="Polygon2D" parent="HauntedDecor"]
+position = Vector2(580, -400)
+color = Color(0.75, 0.15, 0.20, 0.85)
+polygon = PackedVector2Array(-12, 25, 12, 25, 8, -25, 0, -35, -8, -25)
+
+[node name="BloodCrystalB" type="Polygon2D" parent="HauntedDecor"]
+position = Vector2(600, -385)
+rotation = 0.3
+color = Color(0.65, 0.12, 0.18, 0.80)
+polygon = PackedVector2Array(-10, 20, 10, 20, 6, -20, 0, -28, -6, -20)
+
+[node name="BloodCrystalC" type="Polygon2D" parent="HauntedDecor"]
+position = Vector2(-600, -350)
+color = Color(0.70, 0.14, 0.19, 0.82)
+polygon = PackedVector2Array(-14, 22, 14, 22, 10, -22, 0, -32, -10, -22)
+
+; ── Correntes suspensas ──────────────────────────────────────────────────
+[node name="ChainA" type="Line2D" parent="HauntedDecor"]
+z_index = 1
+position = Vector2(-400, -700)
+width = 3.0
+default_color = Color(0.25, 0.22, 0.28, 0.75)
+points = PackedVector2Array(0, 0, 5, 40, -3, 80, 4, 120, -2, 160, 3, 200)
+
+[node name="ChainB" type="Line2D" parent="HauntedDecor"]
+z_index = 1
+position = Vector2(300, -700)
+width = 2.5
+default_color = Color(0.22, 0.20, 0.26, 0.70)
+points = PackedVector2Array(0, 0, -4, 50, 2, 100, -3, 150, 1, 190)
+
+; ── Símbolo de olho vampírico na parede ─────────────────────────────────
+[node name="EyeSymbol" type="Node2D" parent="HauntedDecor"]
+position = Vector2(0, -650)
+
+[node name="EyeOutline" type="Line2D" parent="HauntedDecor/EyeSymbol"]
+width = 2.5
+default_color = Color(0.55, 0.10, 0.10, 0.50)
+points = PackedVector2Array(-40, 0, -20, -15, 0, -18, 20, -15, 40, 0, 20, 15, 0, 18, -20, 15, -40, 0)
+
+[node name="Pupil" type="Polygon2D" parent="HauntedDecor/EyeSymbol"]
+color = Color(0.60, 0.08, 0.08, 0.65)
+polygon = PackedVector2Array(-8, 0, 0, -8, 8, 0, 0, 8)
+
+; ── Gárgulas decorativas ──────────────────────────────────────────────────
+[node name="GargoyleL" type="Polygon2D" parent="HauntedDecor"]
+position = Vector2(-720, -300)
+color = Color(0.18, 0.16, 0.20, 1)
+polygon = PackedVector2Array(0, 0, 15, 10, 20, 35, 5, 50, -5, 50, -10, 35, -5, 10)
+
+[node name="GargoyleR" type="Polygon2D" parent="HauntedDecor"]
+position = Vector2(720, -300)
+color = Color(0.18, 0.16, 0.20, 1)
+polygon = PackedVector2Array(0, 0, 5, 10, 10, 35, -5, 50, -15, 50, -20, 35, -15, 10)
+
+; ── Sombras/projectos de janela gótica ───────────────────────────────────
+[node name="WindowShadow" type="Polygon2D" parent="HauntedDecor"]
+z_index = -1
+position = Vector2(0, 0)
+color = Color(0.0, 0.0, 0.0, 0.25)
+polygon = PackedVector2Array(-600, -600, -400, -600, -350, -400, -450, -200, -550, -400, -600, -600)
+
+; ── Morcegos decorativos (sem colisão) ─────────────────────────────────────
+[node name="BatA" type="Polygon2D" parent="HauntedDecor"]
+z_index = 3
+position = Vector2(-200, -580)
+color = Color(0.08, 0.05, 0.10, 0.95)
+polygon = PackedVector2Array(0, 0, -20, -10, -30, -6, -22, 2, 0, 8, 22, 2, 30, -6, 20, -10)
+
+[node name="BatA_BodyDot" type="Polygon2D" parent="HauntedDecor"]
+z_index = 3
+position = Vector2(-200, -580)
+color = Color(0.14, 0.08, 0.16, 0.95)
+polygon = PackedVector2Array(-4, 2, 4, 2, 4, 8, -4, 8)
+
+[node name="BatB" type="Polygon2D" parent="HauntedDecor"]
+z_index = 3
+position = Vector2(340, -560)
+color = Color(0.08, 0.05, 0.10, 0.95)
+polygon = PackedVector2Array(0, 0, -16, -8, -24, -4, -18, 2, 0, 6, 18, 2, 24, -4, 16, -8)
+
+[node name="BatC" type="Polygon2D" parent="HauntedDecor"]
+z_index = 3
+position = Vector2(80, -620)
+rotation = 0.2
+color = Color(0.08, 0.05, 0.10, 0.90)
+polygon = PackedVector2Array(0, 0, -18, -9, -26, -5, -20, 2, 0, 7, 20, 2, 26, -5, 18, -9)
+
+; ── Luz vermelha/roxa de ambiente (PointLight2D) ──────────────────────────
+[node name="BloodLight" type="PointLight2D" parent="HauntedDecor"]
+position = Vector2(0, -100)
+color = Color(0.55, 0.04, 0.08, 1)
+energy = 0.60
+range_item_cull_mask = 1
+range_height = 80.0
+range_softness = 0.8
+
+[node name="CandleLight" type="PointLight2D" parent="HauntedDecor"]
+position = Vector2(-120, -558)
+color = Color(0.90, 0.40, 0.10, 1)
+energy = 0.45
+range_height = 40.0
+range_softness = 0.6
+
+[node name="AltarLight" type="PointLight2D" parent="HauntedDecor"]
+position = Vector2(-60, -580)
+color = Color(0.80, 0.30, 0.08, 1)
+energy = 0.35
+range_height = 30.0
+range_softness = 0.5
+
+; ── Luzes vermelhas adicionais ────────────────────────────────────────────
+[node name="FloorLightA" type="PointLight2D" parent="HauntedDecor"]
+position = Vector2(-450, 180)
+color = Color(0.70, 0.15, 0.15, 1)
+energy = 0.40
+range_height = 50.0
+range_softness = 0.6
+
+[node name="FloorLightB" type="PointLight2D" parent="HauntedDecor"]
+position = Vector2(520, -80)
+color = Color(0.70, 0.15, 0.15, 1)
+energy = 0.40
+range_height = 50.0
+range_softness = 0.6
+
+[node name="PentagramLight" type="PointLight2D" parent="HauntedDecor"]
+position = Vector2(200, 200)
+color = Color(0.65, 0.05, 0.10, 1)
+energy = 0.55
+range_height = 60.0
+range_softness = 0.7
+
+[node name="CrystalLight" type="PointLight2D" parent="HauntedDecor"]
+position = Vector2(590, -395)
+color = Color(0.75, 0.20, 0.25, 1)
+energy = 0.35
+range_height = 40.0
+range_softness = 0.5
+
+; ══════════════════════════════════════════════════════════════════════════
+; NÓS FIXOS
+; ══════════════════════════════════════════════════════════════════════════
 [node name="Spawn" type="Marker2D" parent="." unique_id=1480267787]
 position = Vector2(0, 320)
 
@@ -149,6 +824,7 @@ script = ExtResource("4_gm")
 [node name="TorchVisionRing" parent="." instance=ExtResource("6_torch")]
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1080078056]
+color = Color(0.35, 0.12, 0.32, 1)
 script = ExtResource("2_luz")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=951372197]

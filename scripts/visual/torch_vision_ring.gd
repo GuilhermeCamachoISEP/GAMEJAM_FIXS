@@ -1,7 +1,7 @@
 extends CanvasLayer
 ## Escurece tudo fora de um círculo centrado no jogador (coordenadas de ecrã derivadas do raio em mundo).
 
-@export var darken: Color = Color(0.025, 0.02, 0.07, 0.88)
+@export var darken: Color = Color(0.22, 0.0, 0.0, 0.82)
 
 @onready var _rect: ColorRect = $ColorRect
 
