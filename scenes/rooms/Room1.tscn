@@ -1,7 +1,78 @@
-[gd_scene load_steps=2 format=3 uid="uid://dqroom1sinsv01"]
+[gd_scene format=3 uid="uid://ctgkxc7xpqna3"]
 
 [ext_resource type="PackedScene" uid="uid://cvpyiiv0lt2kv" path="res://scenes/rooms/room.tscn" id="1_room"]
+[ext_resource type="Script" uid="uid://b1s0wcna22jh5" path="res://scripts/puzzles/interactable_area.gd" id="2_interact"]
+[ext_resource type="Script" uid="uid://u6i8cn2wenhg" path="res://scenes/rooms/LuzDaSala.gd" id="3_eud5g"]
+[ext_resource type="Script" uid="uid://d0qvuwf01ocoh" path="res://scripts/rooms/room1.gd" id="4_room1"]
 
-[node name="Room1" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_quadro"]
+size = Vector2(120, 80)
 
-[node name="Room" parent="." instance=ExtResource("1_room")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cofre"]
+size = Vector2(100, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_porta"]
+size = Vector2(70, 140)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vamp"]
+size = Vector2(120, 100)
+
+[sub_resource type="Environment" id="Environment_j0bqs"]
+background_mode = 3
+glow_enabled = true
+
+[node name="Room1" type="Node2D" unique_id=2076411907]
+script = ExtResource("4_room1")
+
+[node name="Room" parent="." unique_id=1543256686 instance=ExtResource("1_room")]
+
+[node name="Quadro" type="Area2D" parent="." unique_id=608245477]
+position = Vector2(0, -850)
+script = ExtResource("2_interact")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Quadro" unique_id=1125658243]
+shape = SubResource("RectangleShape2D_quadro")
+
+[node name="Visual" type="Polygon2D" parent="Quadro" unique_id=399598233]
+color = Color(0.52, 0.4, 0.28, 1)
+polygon = PackedVector2Array(-60, -40, 60, -40, 60, 40, -60, 40)
+
+[node name="Cofre" type="Area2D" parent="." unique_id=1682674772]
+position = Vector2(0, 880)
+script = ExtResource("2_interact")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cofre" unique_id=370806418]
+shape = SubResource("RectangleShape2D_cofre")
+
+[node name="Visual" type="Polygon2D" parent="Cofre" unique_id=445870085]
+color = Color(0.22, 0.22, 0.26, 1)
+polygon = PackedVector2Array(-50, -50, 50, -50, 50, 50, -50, 50)
+
+[node name="Porta" type="Area2D" parent="." unique_id=364211439]
+position = Vector2(920, 0)
+script = ExtResource("2_interact")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Porta" unique_id=362187013]
+shape = SubResource("RectangleShape2D_porta")
+
+[node name="Visual" type="Polygon2D" parent="Porta" unique_id=275594620]
+color = Color(0.38, 0.25, 0.15, 1)
+polygon = PackedVector2Array(-35, -70, 35, -70, 35, 70, -35, 70)
+
+[node name="ZonaVampiro" type="Area2D" parent="." unique_id=571589902]
+position = Vector2(-920, 0)
+script = ExtResource("2_interact")
+vampire_only = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaVampiro" unique_id=1316960013]
+shape = SubResource("RectangleShape2D_vamp")
+
+[node name="Visual" type="Polygon2D" parent="ZonaVampiro" unique_id=1801189578]
+color = Color(0.35, 0.15, 0.45, 0.55)
+polygon = PackedVector2Array(-60, -50, 60, -50, 60, 50, -60, 50)
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=445748225]
+script = ExtResource("3_eud5g")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=627489834]
+environment = SubResource("Environment_j0bqs")

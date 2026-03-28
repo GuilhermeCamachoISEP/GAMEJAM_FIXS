@@ -1,8 +1,15 @@
 extends Node
-## Tracks day vs night (human vs vampire) and notifies the game when the phase changes.
-## Later: hook up to lights, NPC schedules, and which puzzles are available.
 
 signal phase_changed(is_night: bool)
 
-func _ready() -> void:
-	pass
+# O GDD diz que o loop começa de noite (Vampiro)
+var is_night: bool = true 
+
+func toggle_phase() -> void:
+	is_night = !is_night
+	phase_changed.emit(is_night)
+	
+	if is_night:
+		print("Anoiteceu... O Vampiro desperta.")
+	else:
+		print("Amanheceu... O Humano acorda.")

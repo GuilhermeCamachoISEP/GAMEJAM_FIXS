@@ -18,3 +18,6 @@ shape = SubResource("RectangleShape2D_body")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1198169990]
 position_smoothing_enabled = true
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=1171781096]
+shadow_enabled = true

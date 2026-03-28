@@ -15,6 +15,11 @@ run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+DayNightSystem="*uid://cbrhqraewh0to"
+LoopSystem="*uid://4dmtaurhe8b5"
+
 [input]
 
 interact={
