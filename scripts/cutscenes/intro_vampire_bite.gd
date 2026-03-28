@@ -114,7 +114,7 @@ func _outro() -> void:
 	var tw := create_tween()
 	tw.tween_property(_fade, "modulate:a", 1.0, 0.95).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	await tw.finished
-	App.go_to_scene(NEXT_SCENE)
+	_go_to_main_scene()
 
 
 func _subtitle_hold(text: String, seconds: float) -> void:
@@ -134,7 +134,18 @@ func _skip_to_game() -> void:
 	if _skippable_after_sec > 0.0:
 		return
 	_running = false
-	App.go_to_scene(NEXT_SCENE)
+	_go_to_main_scene()
+
+
+func _go_to_main_scene() -> void:
+	## Evita depender do identificador global `App` no compilador (autoload nem sempre exposto como nome global).
+	var app := get_tree().root.get_node_or_null("App")
+	if app != null and app.has_method("go_to_scene"):
+		app.call("go_to_scene", NEXT_SCENE)
+	elif ResourceLoader.exists(NEXT_SCENE):
+		get_tree().change_scene_to_file(NEXT_SCENE)
+	else:
+		push_error("IntroCutscene: cena inválida: %s" % NEXT_SCENE)
 
 
 func _process(delta: float) -> void:
