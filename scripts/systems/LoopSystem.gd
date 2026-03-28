@@ -54,6 +54,11 @@ func _start_level_timer() -> void:
 	_level_timer.start()
 
 
+func set_level_timer_paused(paused: bool) -> void:
+	if _level_timer:
+		_level_timer.paused = paused
+
+
 func _on_level_timeout() -> void:
 	if _level_done:
 		return

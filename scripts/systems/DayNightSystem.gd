@@ -54,3 +54,12 @@ func reset_run() -> void:
 
 func stop_phase_timer() -> void:
 	_phase_timer.stop()
+
+
+## Salas com ciclo próprio (ex.: Room2): atualiza fase sem depender do timer global.
+func apply_external_phase(night: bool) -> void:
+	var was_night: bool = is_night
+	is_night = night
+	if was_night and not night:
+		(get_node("/root/InventorySystem") as InventoryData).clear()
+	phase_changed.emit(is_night)
