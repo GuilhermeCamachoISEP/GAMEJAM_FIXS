@@ -134,3 +134,9 @@ Mesmo com reset:
 - Porta abre mais rápido a cada tentativa  
 
 💡 Dá sensação de progressão sem quebrar o loop
+
+---
+
+## Integração técnica (equipa)
+
+Fluxo de nível, reset, vitória e transições: ver **[docs/INTEGRATION.md](docs/INTEGRATION.md)** (papéis A/B/D e como encaixar sem conflitos em `project.godot`).
