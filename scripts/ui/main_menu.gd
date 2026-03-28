@@ -30,9 +30,8 @@ func _ready() -> void:
 	options_panel.hide()
 
 func _on_play_pressed() -> void:
-	# TODO: Change Game.first_play_scene to this menu path in game.gd
-	# For now, go directly to main level
-	App.go_to_scene(GamePaths.MAIN_LEVEL)
+	# Go to intro cutscene first, then it will navigate to main level
+	App.go_to_scene(GamePaths.INTRO_VAMPIRE_BITE)
 
 func _on_options_pressed() -> void:
 	options_panel.show()
