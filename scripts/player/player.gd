@@ -10,7 +10,7 @@ const _FACE_LEFT: int = 3
 @export var top_down: bool = true
 @export var speed: float = 280.0
 @export var jump_velocity: float = -480.0
-@export var interact_distance: float = 50.0
+@export var interact_distance: float = 160.0
 @export var dash_speed: float = 600.0
 @export var dash_duration: float = 0.15
 @export var dash_cooldown: float = 1.0
@@ -45,6 +45,10 @@ var _light_pulse_time: float = 0.0
 var _light_pulse_speed: float = 2.5  # Rads per second
 var _light_pulse_amount: float = 0.15
 var _light_base_energy: float = 1.0
+## Salas muito escuras (ex.: Room4) somam isto à energia base da tocha.
+var _torch_energy_bonus: float = 0.0
+const _TORCH_BASE_ENERGY_NIGHT: float = 2.9
+const _TORCH_BASE_ENERGY_DAY: float = 2.25
 
 # Dash trail variables
 var _ghost_spawn_timer: float = 0.0
@@ -164,19 +168,30 @@ func _feel_squash(scale_a: Vector2, duration: float) -> void:
 	tw.tween_property(_visual, "scale", Vector2.ONE, duration)
 
 
-func _on_phase_changed(is_night: bool) -> void:
+func set_torch_energy_bonus(extra: float) -> void:
+	_torch_energy_bonus = maxf(0.0, extra)
+	if has_node("/root/DayNightSystem"):
+		_apply_phase_light_values(DayNightSystem.is_night)
+	else:
+		_apply_phase_light_values(true)
+
+
+func _apply_phase_light_values(is_night: bool) -> void:
 	if is_night:
 		point_light.color = Color(1.0, 0.56, 0.58)
-		point_light.energy = 2.9
-		_light_base_energy = 2.9
+		_light_base_energy = _TORCH_BASE_ENERGY_NIGHT + _torch_energy_bonus
 		_light_pulse_speed = 2.8
 		_light_pulse_amount = 0.12
 	else:
 		point_light.color = Color(1.0, 0.99, 0.94)
-		point_light.energy = 2.25
-		_light_base_energy = 2.25
+		_light_base_energy = _TORCH_BASE_ENERGY_DAY + _torch_energy_bonus
 		_light_pulse_speed = 0.8
 		_light_pulse_amount = 0.03
+	point_light.energy = _light_base_energy
+
+
+func _on_phase_changed(is_night: bool) -> void:
+	_apply_phase_light_values(is_night)
 	_visual.queue_redraw()
 
 	if sfx_enabled and _booted:
@@ -361,6 +376,13 @@ func _process(delta: float) -> void:
 
 
 func interact() -> void:
+	var r4: Node = get_tree().get_first_node_in_group("room4")
+	if r4 != null and r4.has_method("try_consume_machine_interact"):
+		if r4.call("try_consume_machine_interact"):
+			_play_action(_stream_interact)
+			_feel_squash(Vector2(1.05, 0.94), 0.12)
+			return
+
 	var space_state := get_world_2d().direct_space_state
 	var face := _get_move_axis()
 	var dirs: Array[Vector2] = []
@@ -376,6 +398,7 @@ func interact() -> void:
 		)
 		query.collide_with_areas = true
 		query.collide_with_bodies = true
+		query.exclude = [get_rid()]
 		var result := space_state.intersect_ray(query)
 		if result and result.collider.has_method("interact"):
 			result.collider.interact(DayNightSystem.is_night)

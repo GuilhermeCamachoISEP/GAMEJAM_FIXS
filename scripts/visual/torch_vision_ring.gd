@@ -2,6 +2,8 @@ extends CanvasLayer
 ## Escurece tudo fora de um círculo centrado no jogador (coordenadas de ecrã derivadas do raio em mundo).
 
 @export var darken: Color = Color(0.22, 0.0, 0.0, 0.82)
+## Se > 0, usa este raio em mundo em vez de `VisionRingConstants.WORLD_RADIUS` (salas maiores / mais luz).
+@export var world_radius_override: float = 0.0
 
 @onready var _rect: ColorRect = $ColorRect
 
@@ -34,6 +36,9 @@ func _process(_delta: float) -> void:
 		return
 	var c: Vector2 = xf * p.global_position
 	_mat.set_shader_parameter("center_px", c)
-	var edge: Vector2 = xf * (p.global_position + Vector2(VisionRingConstants.WORLD_RADIUS, 0.0))
+	var r_world: float = VisionRingConstants.WORLD_RADIUS
+	if world_radius_override > 1.0:
+		r_world = world_radius_override
+	var edge: Vector2 = xf * (p.global_position + Vector2(r_world, 0.0))
 	var r_px: float = maxf(8.0, c.distance_to(edge))
 	_mat.set_shader_parameter("inner_radius_px", r_px)
