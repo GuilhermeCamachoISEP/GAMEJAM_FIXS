@@ -7,6 +7,7 @@
 
 [node name="Main" type="Node2D" unique_id=276319574]
 script = ExtResource("1_main")
+post_victory_scene = "res://scenes/cutscenes/final_vampire_eyes.tscn"
 
 [node name="GameHUD" parent="." unique_id=1734609229 instance=ExtResource("2_hud")]
 

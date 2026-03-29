@@ -1,12 +1,14 @@
 extends Node2D
 
+const GAME_MUSIC_PATH := "res://assets/audio/dark_music.mp3"
+
 ## Cena após completar a última sala da sequência (vazio = ficar na cena com run ganho).
 @export var post_victory_scene: String = ""
 
 ## Ordem do run: Room1, Room2, … — adiciona mais paths no inspector se criares Room3+.
 ## **Só Room2:** deixa aqui um único elemento `res://scenes/rooms/Room2.tscn` ou ativa `start_with_room2_only`.
 @export var room_scene_paths: PackedStringArray = PackedStringArray(
-	["res://scenes/rooms/Room1.tscn", "res://scenes/rooms/Room2.tscn"]
+	["res://scenes/rooms/Room1.tscn", "res://scenes/rooms/Room2.tscn", "res://scenes/rooms/Room4.tscn"]
 )
 
 ## Se ativo, ignora `room_scene_paths` e carrega apenas a Room2 (testes rápidos).
@@ -15,6 +17,7 @@ extends Node2D
 var _room_index: int = 0
 var _room_instance: Node2D
 var _room_paths: Array[String] = []
+var _game_music_player: AudioStreamPlayer
 
 @onready var _room_parent: Node2D = $RoomContainer as Node2D
 @onready var _player: Node2D = $Player as Node2D
@@ -22,6 +25,7 @@ var _room_paths: Array[String] = []
 
 func _ready() -> void:
 	add_to_group("gameplay")
+	_setup_game_music()
 	_build_valid_room_list()
 	if _room_paths.is_empty():
 		push_error("Main: `room_scene_paths` está vazio — define salas no inspector.")
@@ -36,6 +40,34 @@ func _ready() -> void:
 	var game_node: Node = get_tree().root.get_node_or_null("Game")
 	if game_node != null and game_node.has_method("notify_level_loaded"):
 		game_node.call("notify_level_loaded")
+
+
+func _setup_game_music() -> void:
+	_game_music_player = AudioStreamPlayer.new()
+	add_child(_game_music_player)
+	_game_music_player.bus = _get_music_bus_name()
+
+	var stream := load(GAME_MUSIC_PATH) as AudioStream
+	if stream == null:
+		push_warning("Main: game music missing at %s" % GAME_MUSIC_PATH)
+		return
+
+	_game_music_player.stream = stream
+	if not _game_music_player.finished.is_connected(_on_game_music_finished):
+		_game_music_player.finished.connect(_on_game_music_finished)
+	_game_music_player.play()
+
+
+func _get_music_bus_name() -> String:
+	if AudioServer.get_bus_index(AudioBuses.MUSIC) >= 0:
+		return AudioBuses.MUSIC
+	push_warning("Main: bus '%s' em falta, a usar Master." % AudioBuses.MUSIC)
+	return AudioBuses.MASTER
+
+
+func _on_game_music_finished() -> void:
+	if _game_music_player and is_inside_tree():
+		_game_music_player.play()
 
 
 func _build_valid_room_list() -> void:
@@ -64,6 +96,8 @@ func _checklist_tasks_for_room(room_i: int) -> PackedStringArray:
 	var path_s: String = _room_paths[room_i]
 	if path_s.contains("Room2"):
 		return PackedStringArray(["r2_code_entered"])
+	if path_s.contains("Room4"):
+		return PackedStringArray(["r4_recorded_sequence", "r4_solved_bells"])
 	if path_s.contains("Room1"):
 		return PackedStringArray()
 	push_warning("Main: sem checklist definida para: %s" % path_s)

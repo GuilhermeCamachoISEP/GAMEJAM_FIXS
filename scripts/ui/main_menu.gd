@@ -2,6 +2,7 @@ extends CanvasLayer
 
 const EASTER_EGG_TEXTURE_PATH := "res://assets/sprites/10005812_menu_bg.png"
 const EASTER_EGG_AUDIO_PATH := "res://assets/audio/12aaaaaaaaaaaaaa-[AudioTrimmer.com].mp3"
+const MENU_MUSIC_PATH := "res://assets/audio/backgroundMusic/rung.wav"
 
 @onready var play_button: Button = %PlayButton
 @onready var options_button: Button = %OptionsButton
@@ -16,6 +17,7 @@ const EASTER_EGG_AUDIO_PATH := "res://assets/audio/12aaaaaaaaaaaaaa-[AudioTrimme
 @onready var easter_egg_hint: Label = %EasterEggHint
 
 var easter_egg_player: AudioStreamPlayer
+var _menu_music_player: AudioStreamPlayer
 
 
 func _ready() -> void:
@@ -29,6 +31,7 @@ func _ready() -> void:
 	fullscreen_check.toggled.connect(_on_fullscreen_toggled)
 
 	_setup_easter_egg()
+	_setup_menu_music()
 	_setup_settings_values()
 
 
@@ -65,6 +68,35 @@ func _setup_easter_egg() -> void:
 		easter_egg_player.stream = ProceduralSfx.interact_blip()
 	else:
 		easter_egg_player.stream = stream
+
+
+func _setup_menu_music() -> void:
+	_menu_music_player = AudioStreamPlayer.new()
+	add_child(_menu_music_player)
+	_menu_music_player.process_mode = Node.PROCESS_MODE_ALWAYS
+	_menu_music_player.bus = _get_music_bus_name()
+
+	var stream := load(MENU_MUSIC_PATH) as AudioStream
+	if stream == null:
+		push_warning("MainMenu: menu music missing at %s" % MENU_MUSIC_PATH)
+		return
+
+	_menu_music_player.stream = stream
+	if not _menu_music_player.finished.is_connected(_on_menu_music_finished):
+		_menu_music_player.finished.connect(_on_menu_music_finished)
+	_menu_music_player.play()
+
+
+func _get_music_bus_name() -> String:
+	if AudioServer.get_bus_index(AudioBuses.MUSIC) >= 0:
+		return AudioBuses.MUSIC
+	push_warning("MainMenu: bus '%s' em falta, a usar Master." % AudioBuses.MUSIC)
+	return AudioBuses.MASTER
+
+
+func _on_menu_music_finished() -> void:
+	if _menu_music_player and is_inside_tree():
+		_menu_music_player.play()
 
 
 func _setup_settings_values() -> void:

@@ -1,0 +1,120 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/cutscenes/final_vampire_eyes.gd" id="1_final"]
+[ext_resource type="Script" path="res://scripts/cutscenes/cutscene_figure.gd" id="2_fig"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_sub"]
+font_size = 22
+font_color = Color(0.92, 0.88, 0.82, 1)
+outline_size = 5
+outline_color = Color(0.06, 0.04, 0.08, 0.95)
+
+[node name="FinalVampireEyes" type="Node2D"]
+script = ExtResource("1_final")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.1, 1.1)
+
+[node name="Stage" type="Node2D" parent="."]
+
+[node name="Backdrop" type="Polygon2D" parent="Stage"]
+z_index = -5
+color = Color(0.05, 0.02, 0.06, 1)
+polygon = PackedVector2Array(-1400, -900, 1400, -900, 1400, 900, -1400, 900)
+
+[node name="Halo" type="Polygon2D" parent="Stage"]
+z_index = -4
+color = Color(0.3, 0.05, 0.08, 0.22)
+polygon = PackedVector2Array(-420, -320, 420, -320, 420, 320, -420, 320)
+
+[node name="Vampire" type="Node2D" parent="Stage"]
+position = Vector2(0, 40)
+scale = Vector2(3.2, 3.2)
+script = ExtResource("2_fig")
+mode = 1
+
+[node name="LeftHand" type="Node2D" parent="Stage"]
+position = Vector2(-220, 40)
+
+[node name="Palm" type="Polygon2D" parent="Stage/LeftHand"]
+color = Color(0.74, 0.66, 0.74, 1)
+polygon = PackedVector2Array(-34, -22, 12, -30, 28, 0, 12, 30, -34, 22)
+
+[node name="Arm" type="Polygon2D" parent="Stage/LeftHand"]
+z_index = -1
+color = Color(0.16, 0.08, 0.1, 1)
+polygon = PackedVector2Array(-180, -18, -28, -18, -18, 18, -180, 18)
+
+[node name="RightHand" type="Node2D" parent="Stage"]
+position = Vector2(220, 40)
+scale = Vector2(-1, 1)
+
+[node name="Palm" type="Polygon2D" parent="Stage/RightHand"]
+color = Color(0.74, 0.66, 0.74, 1)
+polygon = PackedVector2Array(-34, -22, 12, -30, 28, 0, 12, 30, -34, 22)
+
+[node name="Arm" type="Polygon2D" parent="Stage/RightHand"]
+z_index = -1
+color = Color(0.16, 0.08, 0.1, 1)
+polygon = PackedVector2Array(-180, -18, -28, -18, -18, 18, -180, 18)
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="Fade" type="ColorRect" parent="UILayer"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Flash" type="ColorRect" parent="UILayer"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.48, 0.04, 0.08, 0)
+
+[node name="SubtitleBox" type="MarginContainer" parent="UILayer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 48.0
+offset_top = -200.0
+offset_right = -48.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Subtitle" type="RichTextLabel" parent="UILayer/SubtitleBox"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+horizontal_alignment = 1
+theme_override_colors/default_color = Color(0.92, 0.88, 0.82, 1)
+theme_override_font_sizes/normal_font_size = 24
+
+[node name="SkipHint" type="Label" parent="UILayer"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -52.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
+text = "Enter / Espaco / clique - saltar"
+label_settings = SubResource("LabelSettings_sub")
