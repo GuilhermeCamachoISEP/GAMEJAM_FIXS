@@ -69,6 +69,11 @@ func interact(is_night: bool) -> void:
 
 
 func _load_room2() -> void:
+	var gameplay_root := get_tree().get_first_node_in_group("gameplay")
+	if gameplay_root != null and gameplay_root.has_method("advance_to_next_room"):
+		gameplay_root.call("advance_to_next_room")
+		return
+
 	var next_scene = load("res://scenes/rooms/Room2.tscn")
 	if next_scene:
 		get_tree().change_scene_to_packed(next_scene)

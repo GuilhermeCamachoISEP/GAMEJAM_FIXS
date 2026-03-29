@@ -111,7 +111,15 @@ func _on_level_failed() -> void:
 	pass
 
 
+func advance_to_next_room() -> void:
+	call_deferred("_advance_to_next_room")
+
+
 func _on_level_completed() -> void:
+	advance_to_next_room()
+
+
+func _advance_to_next_room() -> void:
 	_room_index += 1
 	if _room_index >= _room_paths.size():
 		var game_node: Node = get_tree().root.get_node_or_null("Game")

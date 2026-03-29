@@ -406,6 +406,50 @@ func interact() -> void:
 			_feel_squash(Vector2(1.05, 0.94), 0.12)
 			return
 
+	var nearby := _find_nearby_interactable()
+	if nearby != null:
+		nearby.interact(DayNightSystem.is_night)
+		_play_action(_stream_interact)
+		_feel_squash(Vector2(1.05, 0.94), 0.12)
+
+
+func _find_nearby_interactable() -> Node:
+	var space_state := get_world_2d().direct_space_state
+	var shape := CircleShape2D.new()
+	shape.radius = interact_distance
+
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = shape
+	query.transform = Transform2D(0.0, global_position)
+	query.collide_with_areas = true
+	query.collide_with_bodies = true
+	query.exclude = [get_rid()]
+
+	var best: Node = null
+	var best_score: float = -INF
+	var facing := _last_move_dir.normalized() if _last_move_dir.length_squared() > 0.01 else Vector2.ZERO
+
+	for hit in space_state.intersect_shape(query, 16):
+		var collider := hit.collider as Node
+		if collider == null or not collider.has_method("interact"):
+			continue
+
+		var to_target := Vector2.ZERO
+		if collider is Node2D:
+			to_target = (collider as Node2D).global_position - global_position
+
+		var distance_score := -to_target.length()
+		var facing_score := 0.0
+		if facing != Vector2.ZERO and to_target.length_squared() > 0.01:
+			facing_score = facing.dot(to_target.normalized()) * 1000.0
+
+		var score := facing_score + distance_score
+		if score > best_score:
+			best_score = score
+			best = collider
+
+	return best
+
 
 func _emit_footstep_dust() -> void:
 	if _footstep_dust:
