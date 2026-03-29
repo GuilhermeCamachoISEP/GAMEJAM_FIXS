@@ -3,8 +3,12 @@ extends Node
 signal phase_changed(is_night: bool)
 signal phase_time_updated(remaining_sec: float)
 
+const DEFAULT_NIGHT_DURATION_SEC: float = 45.0
+const DEFAULT_DAY_DURATION_SEC: float = 45.0
+
 ## Turnos fixos (segundos por fase). Iguais no MVP.
-@export var phase_duration_sec: float = 45.0
+@export var night_duration_sec: float = DEFAULT_NIGHT_DURATION_SEC
+@export var day_duration_sec: float = DEFAULT_DAY_DURATION_SEC
 
 ## O GDD: o loop começa de noite (vampiro).
 var is_night: bool = true
@@ -32,8 +36,20 @@ func get_phase_time_left() -> float:
 
 
 func _start_phase_timer() -> void:
-	_phase_timer.wait_time = phase_duration_sec
+	_phase_timer.wait_time = night_duration_sec if is_night else day_duration_sec
 	_phase_timer.start()
+
+
+func set_phase_durations(night_sec: float, day_sec: float, restart_phase: bool = false) -> void:
+	night_duration_sec = night_sec
+	day_duration_sec = day_sec
+	if restart_phase:
+		_start_phase_timer()
+
+
+func reset_phase_durations() -> void:
+	night_duration_sec = DEFAULT_NIGHT_DURATION_SEC
+	day_duration_sec = DEFAULT_DAY_DURATION_SEC
 
 
 func _on_phase_timeout() -> void:

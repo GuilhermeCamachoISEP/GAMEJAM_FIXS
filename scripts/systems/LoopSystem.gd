@@ -46,6 +46,7 @@ func is_exit_unlocked() -> bool:
 func start_level_session() -> void:
 	_level_done = false
 	_start_level_timer()
+	DayNightSystem.reset_phase_durations()
 	DayNightSystem.reset_run()
 
 
@@ -94,6 +95,7 @@ func complete_level() -> void:
 ## Entre salas na mesma `main.tscn`: volta a permitir o timer global e o fim do segmento.
 func prepare_next_room_segment() -> void:
 	_level_done = false
+	DayNightSystem.reset_phase_durations()
 	DayNightSystem.reset_run()
 	_start_level_timer()
 

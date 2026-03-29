@@ -6,10 +6,14 @@ extends Node2D
 
 ## Cor HDR para Glow no `Polygon2D` da zona (valores > 1 quando o ambiente tem Glow).
 const _VAMP_GLOW_BASE := Color(2.4, 0.45, 2.6)
+const _ROOM1_NIGHT_DURATION_SEC: float = 15.0
+const _ROOM1_DAY_DURATION_SEC: float = 20.0
 
 const _INTERACTIVE_NODES: PackedStringArray = ["Quadro", "Cofre", "Porta", "ZonaVampiro"]
 
 func _ready() -> void:
+	if DayNightSystem:
+		DayNightSystem.set_phase_durations(_ROOM1_NIGHT_DURATION_SEC, _ROOM1_DAY_DURATION_SEC, true)
 	_setup_light_occluders()
 	_setup_vampire_hdr_glow()
 	_connect_interactable_signals()
