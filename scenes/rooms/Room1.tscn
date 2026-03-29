@@ -104,9 +104,9 @@ environment = SubResource("Environment_j0bqs")
 [node name="MemoryPathPuzzle" type="Node2D" parent="." unique_id=1000000001]
 script = ExtResource("5_puzzle")
 tile_size = 64.0
-grid_offset = Vector2(-160, -160)
-grid_width = 5
-grid_height = 5
+grid_offset = Vector2(-320, -320)
+grid_width = 10
+grid_height = 10
 correct_path = [Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2), Vector2i(2, 1), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0)]
 
 [node name="Porta" type="Area2D" parent="." unique_id=1478008756]
