@@ -102,9 +102,10 @@ script = ExtResource("3_eud5g")
 environment = SubResource("Environment_j0bqs")
 
 [node name="MemoryPathPuzzle" type="Node2D" parent="." unique_id=1000000001]
+z_index = -1
 script = ExtResource("5_puzzle")
-tile_size = 64.0
-grid_offset = Vector2(-320, -320)
+tile_size = 190.0
+grid_offset = Vector2(-855, -855)
 grid_width = 10
 grid_height = 10
 correct_path = [Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2), Vector2i(2, 1), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0)]
