@@ -12,7 +12,7 @@
 [sub_resource type="Environment" id="Environment_room2"]
 background_mode = 3
 ambient_light_color = Color(0.08, 0.02, 0.10, 1)
-ambient_light_energy = 1.2
+ambient_light_energy = 1.38
 glow_enabled = true
 glow_intensity = 1.1
 glow_strength = 1.2
@@ -763,7 +763,7 @@ polygon = PackedVector2Array(0, 0, -18, -9, -26, -5, -20, 2, 0, 7, 20, 2, 26, -5
 [node name="BloodLight" type="PointLight2D" parent="HauntedDecor"]
 position = Vector2(0, -100)
 color = Color(0.55, 0.04, 0.08, 1)
-energy = 0.60
+energy = 0.82
 range_item_cull_mask = 1
 range_height = 80.0
 range_softness = 0.8
@@ -771,14 +771,14 @@ range_softness = 0.8
 [node name="CandleLight" type="PointLight2D" parent="HauntedDecor"]
 position = Vector2(-120, -558)
 color = Color(0.90, 0.40, 0.10, 1)
-energy = 0.45
+energy = 0.62
 range_height = 40.0
 range_softness = 0.6
 
 [node name="AltarLight" type="PointLight2D" parent="HauntedDecor"]
 position = Vector2(-60, -580)
 color = Color(0.80, 0.30, 0.08, 1)
-energy = 0.35
+energy = 0.5
 range_height = 30.0
 range_softness = 0.5
 
@@ -786,28 +786,28 @@ range_softness = 0.5
 [node name="FloorLightA" type="PointLight2D" parent="HauntedDecor"]
 position = Vector2(-450, 180)
 color = Color(0.70, 0.15, 0.15, 1)
-energy = 0.40
+energy = 0.56
 range_height = 50.0
 range_softness = 0.6
 
 [node name="FloorLightB" type="PointLight2D" parent="HauntedDecor"]
 position = Vector2(520, -80)
 color = Color(0.70, 0.15, 0.15, 1)
-energy = 0.40
+energy = 0.56
 range_height = 50.0
 range_softness = 0.6
 
 [node name="PentagramLight" type="PointLight2D" parent="HauntedDecor"]
 position = Vector2(200, 200)
 color = Color(0.65, 0.05, 0.10, 1)
-energy = 0.55
+energy = 0.72
 range_height = 60.0
 range_softness = 0.7
 
 [node name="CrystalLight" type="PointLight2D" parent="HauntedDecor"]
 position = Vector2(590, -395)
 color = Color(0.75, 0.20, 0.25, 1)
-energy = 0.35
+energy = 0.48
 range_height = 40.0
 range_softness = 0.5
 
@@ -823,9 +823,10 @@ script = ExtResource("4_gm")
 [node name="CodePuzzleRoom2" parent="." unique_id=2024524658 instance=ExtResource("5_code")]
 
 [node name="TorchVisionRing" parent="." instance=ExtResource("6_torch")]
+world_radius_override = 460.0
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1080078056]
-color = Color(0.35, 0.12, 0.32, 1)
+color = Color(0.62, 0.30, 0.58, 1)
 script = ExtResource("2_luz")
 
 [node name="DayNightNotification" type="CanvasLayer" parent="."]

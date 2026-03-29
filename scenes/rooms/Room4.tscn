@@ -6,7 +6,7 @@
 
 [sub_resource type="Environment" id="Environment_r4"]
 background_mode = 3
-ambient_light_energy = 1.15
+ambient_light_energy = 1.32
 glow_enabled = true
 glow_intensity = 0.38
 glow_strength = 0.52
@@ -19,7 +19,7 @@ script = ExtResource("1_room4")
 position = Vector2(0, 300)
 
 [node name="TorchVisionRing" parent="." instance=ExtResource("3_torch")]
-world_radius_override = 260.0
+world_radius_override = 420.0
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 script = ExtResource("2_luz")

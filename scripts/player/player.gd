@@ -43,12 +43,12 @@ var _footstep_cooldown: float = 0.0
 # Light pulse variables
 var _light_pulse_time: float = 0.0
 var _light_pulse_speed: float = 2.5  # Rads per second
-var _light_pulse_amount: float = 0.15
+var _light_pulse_amount: float = 0.18
 var _light_base_energy: float = 1.0
 ## Salas muito escuras (ex.: Room4) somam isto à energia base da tocha.
 var _torch_energy_bonus: float = 0.0
-const _TORCH_BASE_ENERGY_NIGHT: float = 2.9
-const _TORCH_BASE_ENERGY_DAY: float = 2.25
+const _TORCH_BASE_ENERGY_NIGHT: float = 4.1
+const _TORCH_BASE_ENERGY_DAY: float = 3.1
 
 # Dash trail variables
 var _ghost_spawn_timer: float = 0.0
@@ -70,7 +70,7 @@ var _last_collision_normal: Vector2 = Vector2.ZERO
 func _ready() -> void:
 	add_to_group("player")
 	_setup_point_light_texture()
-	point_light.texture_scale = 6.2
+	point_light.texture_scale = 7.6
 	point_light.position = Vector2.ZERO
 	point_light.shadow_enabled = false
 	point_light.shadow_filter = Light2D.SHADOW_FILTER_PCF5
@@ -181,12 +181,12 @@ func _apply_phase_light_values(is_night: bool) -> void:
 		point_light.color = Color(1.0, 0.56, 0.58)
 		_light_base_energy = _TORCH_BASE_ENERGY_NIGHT + _torch_energy_bonus
 		_light_pulse_speed = 2.8
-		_light_pulse_amount = 0.12
+		_light_pulse_amount = 0.16
 	else:
 		point_light.color = Color(1.0, 0.99, 0.94)
 		_light_base_energy = _TORCH_BASE_ENERGY_DAY + _torch_energy_bonus
 		_light_pulse_speed = 0.8
-		_light_pulse_amount = 0.03
+		_light_pulse_amount = 0.06
 	point_light.energy = _light_base_energy
 
 

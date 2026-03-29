@@ -1,7 +1,7 @@
 extends CanvasLayer
 ## Escurece tudo fora de um círculo centrado no jogador (coordenadas de ecrã derivadas do raio em mundo).
 
-@export var darken: Color = Color(0.22, 0.0, 0.0, 0.82)
+@export var darken: Color = Color(0.16, 0.02, 0.02, 0.58)
 ## Se > 0, usa este raio em mundo em vez de `VisionRingConstants.WORLD_RADIUS` (salas maiores / mais luz).
 @export var world_radius_override: float = 0.0
 

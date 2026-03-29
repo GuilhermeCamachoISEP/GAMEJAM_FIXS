@@ -8,6 +8,6 @@ func _ready() -> void:
 
 func _on_phase_changed(is_night: bool) -> void:
 	if is_night:
-		color = Color(0.9, 0.88, 0.96, 1.0)
+		color = Color(1.0, 0.98, 1.02, 1.0)
 	else:
-		color = Color(1.18, 1.14, 1.08, 1.0)
+		color = Color(1.26, 1.22, 1.16, 1.0)
