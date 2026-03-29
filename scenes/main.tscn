@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cldkxnaf0uy2l"]
+[gd_scene format=3 uid="uid://b2fjj1t7h77c4"]
 
 [ext_resource type="Script" uid="uid://c1lad61w0sk0w" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/ui/game_hud.tscn" id="2_hud"]
@@ -7,6 +7,7 @@
 
 [node name="Main" type="Node2D" unique_id=276319574]
 script = ExtResource("1_main")
+start_with_room2_only = true
 
 [node name="GameHUD" parent="." unique_id=1734609229 instance=ExtResource("2_hud")]
 
