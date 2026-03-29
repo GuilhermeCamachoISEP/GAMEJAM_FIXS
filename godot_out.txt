@@ -1,0 +1,42 @@
+Godot Engine v4.6.1.stable.official.14d19694e - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.86 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4060 Laptop GPU
+
+A tentar tocar: idle_down
+A tentar tocar: idle_down
+A tentar tocar: idle_right
+A tentar tocar: walk_right
+A tentar tocar: walk_up
+A tentar tocar: walk_right
+A tentar tocar: walk_down
+A tentar tocar: walk_right
+A tentar tocar: walk_up
+A tentar tocar: walk_right
+A tentar tocar: walk_down
+A tentar tocar: walk_right
+A tentar tocar: idle_right
+A tentar tocar: idle_left
+A tentar tocar: walk_left
+A tentar tocar: idle_left
+A tentar tocar: idle_right
+A tentar tocar: walk_right
+A tentar tocar: idle_right
+A tentar tocar: idle_left
+A tentar tocar: walk_left
+A tentar tocar: walk_up
+A tentar tocar: walk_left
+A tentar tocar: walk_left
+Dia começou. Voltas ao início.
+Passo correto: 1/18
+A tentar tocar: idle_left
+A tentar tocar: idle_right
+A tentar tocar: walk_right
+Passo correto: 2/18
+Passo correto: 3/18
+A tentar tocar: idle_right
+A tentar tocar: idle_up
+A tentar tocar: walk_up
+Passo correto: 4/18
+Passo correto: 5/18
+A tentar tocar: idle_up
+A tentar tocar: idle_right
+A tentar tocar: walk_right

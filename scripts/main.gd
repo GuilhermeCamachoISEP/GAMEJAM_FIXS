@@ -65,7 +65,7 @@ func _checklist_tasks_for_room(room_i: int) -> PackedStringArray:
 	if path_s.contains("Room2"):
 		return PackedStringArray(["r2_code_entered"])
 	if path_s.contains("Room1"):
-		return PackedStringArray(["view_symbols", "open_safe"])
+		return PackedStringArray()
 	push_warning("Main: sem checklist definida para: %s" % path_s)
 	return PackedStringArray()
 

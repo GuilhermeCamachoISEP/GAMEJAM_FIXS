@@ -1,0 +1,2 @@
+WARNING: 2D MSAA is not yet supported for GLES3.
+   at: render_target_set_msaa (drivers/gles3/storage/texture_storage.cpp:2934)
